@@ -1,7 +1,5 @@
 package stickman.model;
 
-import stickman.view.EntityView;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,10 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import java.lang.UnsupportedOperationException;
-
 import java.util.List;
 import java.util.ArrayList;
+
+import stickman.view.Platform;
+import stickman.view.PlatformFactory;
+import stickman.view.PlatformFactoryImpl;
 
 public class GameEngineImpl implements GameEngine {
     private JSONObject jsonDict;
@@ -24,12 +24,14 @@ public class GameEngineImpl implements GameEngine {
     public GameEngineImpl(String jsonConfigPath, String levelName) {
         // @TODO: Read JSON config
         this.jsonDict = parseJsonConfig(jsonConfigPath);
+        System.out.println(this.jsonDict.get("stickmanSize"));
+        this.levelName = levelName;
         this.gameLevel = this.buildLevel(levelName);
     }
 
     @Override
     public Level getCurrentLevel() {
-        return null;
+        return this.gameLevel;
     }
 
     @Override
@@ -67,32 +69,98 @@ public class GameEngineImpl implements GameEngine {
      */
 
     private Level buildLevel(String levelName) {
+        double stickmanStartingXPos = (double) this.jsonDict.get("stickmanStartingPos");
         JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
 
         JSONArray platformArrayJSON = parseJsonArray(levelDict, "platformList");
-        JSONArray mushroomArrayJSON = parseJsonArray(levelDict, "mushroomList");
+        JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
         JSONArray enemyArrayJSON = parseJsonArray(levelDict, "enemyList");
 
-        List<Platform> platformObjectList = this.buildPlatforms(platformArrayJSON);
+        List<Platform> platformList = this.buildPlatforms(platformArrayJSON);
+        List<Entity> powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
+//        List<Entity> enemyList = this.buildEnemyEntities(enemyArrayJSON);
 
-        return null;
+        Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
+
+        List<Entity> entityList = new ArrayList<>();
+        entityList.addAll(powerUpList);
+        entityList.add(flag);
+
+        double height = (double) levelDict.get("height");
+        double width = (double) levelDict.get("width");
+        double floorHeight = (double) levelDict.get("floorHeight");
+
+        Level gameLevel = new LevelImpl(
+            platformList,
+            entityList,
+            height,
+            width,
+            floorHeight,
+            stickmanStartingXPos
+        );
+
+        return gameLevel;
     }
 
-    private List<Platform> buildPlatforms(JSONArray platformArrayJSON) {
-        List<Platform> platformList = new ArrayList<>();
-        PlatformFactory platformFactory = new PlatformFactoryStationary();
+    private List<Platform> buildPlatforms(JSONArray arrayJSON) {
+        List<Platform> objList = new ArrayList<>();
+        PlatformFactory platformFactory = new PlatformFactoryImpl();
 
-        for (Object platform: platformArrayJSON) {
-            JSONObject platformJSON = (JSONObject) platform;
-            if (platformJSON.get("type").equals("stationary")) {
-                platformList.add(platformFactory.createPlatform(platformJSON));
-            } else {
-                throw new UnsupportedOperationException("Only platform of type 'stationary' is supported right now.");
-            }
+        for (Object obj: arrayJSON) {
+            JSONObject objJSON = (JSONObject) obj;
+            String objType = (String) objJSON.get("type");
+            objList.add(platformFactory.createPlatform(objType, objJSON));
         }
 
-        return platformList;
+        return objList;
     }
+
+    private List<Entity> buildPowerUpEntities(JSONArray arrayJSON) {
+        List<Entity> objList = new ArrayList<>();
+        EntityFactory entityFactory = new PowerUpEntityFactory();
+
+        for (Object obj: arrayJSON) {
+            JSONObject objJSON = (JSONObject) obj;
+            String objType = (String) objJSON.get("type");
+            objList.add(entityFactory.createEntity(objType, objJSON));
+        }
+
+        return objList;
+    }
+
+    private Entity buildFlagEntity(JSONObject objJSON) {
+        // No need to loop through an array since there can only be 1 flag per level.
+        final double width = (double) objJSON.get("width");
+        final double height = (double) objJSON.get("height");
+        final double XPos = (double) objJSON.get("XPos");
+        final double YPos = (double) objJSON.get("YPos");
+        final String imagePath = (String) objJSON.get("imagePath");
+        final Layer layer = Layer.FOREGROUND;
+
+        Entity flag = new EntityFlagImpl(
+            width,
+            height,
+            XPos,
+            YPos,
+            imagePath,
+            layer
+        );
+
+        return flag;
+    }
+
+//    private List<Entity> buildEnemyEntities(JSONArray arrayJSON) {
+//        List<Entity> objList = new ArrayList<>();
+//        EntityFactory entityFactory = new EnemyEntityFactory();
+//
+//        for (Object obj: arrayJSON) {
+//            JSONObject objJSON = (JSONObject) obj;
+//            String objType = (String) objJSON.get("type");
+//            objList.add(entityFactory.createEntity(objType, objJSON));
+//        }
+//
+//        return objList;
+//    }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {
         JSONArray itemList = (JSONArray) jsonDict.get(jsonList);
@@ -116,6 +184,7 @@ public class GameEngineImpl implements GameEngine {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+
         return jsonDict;
     }
 }

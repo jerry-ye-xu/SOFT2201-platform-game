@@ -1,6 +1,8 @@
-package stickman.model;
+package stickman.view;
 
 import stickman.model.Layer;
+
+import javafx.scene.layout.HBox;
 
 public interface Platform {
 
@@ -12,5 +14,7 @@ public interface Platform {
     String getImagePath();
 
     Layer getLayer();
+
+    HBox getHBox();
 
 }

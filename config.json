@@ -1,50 +1,54 @@
 {
   "stickmanSize": "normal",
-  "stickmanPos": {
-    "x": 20.0
-  },
+  "stickmanStartingPos": 20.0,
   "cloudVelocity": 3.2,
   "levelOne": {
     "height": 800,
     "width": 2560,
     "floorHeight": 150,
     "flagPosition": {
-      "height": 150,
-      "width": 2520
+      "height": 15,
+      "width": 15,
+      "XPos": 1560,
+      "YPos": 305,
+      "imagePath": "src/main/resources/flag.jpeg"
     },
-    "platformList": [{
-      "platform": {
+    "platformList": [
+      {
         "type": "stationary",
         "startWidth": 350,
         "endWidth": 700,
         "height": 250,
         "imagePath": "src/main/resources/foot_tile.png"
       },
-      "platform": {
+      {
         "type": "stationary",
         "startWidth": 850,
         "endWidth": 1200,
         "height": 350,
         "imagePath": "src/main/resources/foot_tile.png"
       },
-      "platform": {
+      {
         "type": "stationary",
         "startWidth": 1550,
         "endWidth": 1700,
         "height": 300,
         "imagePath": "src/main/resources/foot_tile.png"
       }
-    }],
-    "mushroomList":[{
-        "mushroom": {
-          "width": 1560,
-          "height": 305,
-          "imagePath": "src/main/resources/mushroom.jpeg"
-        }
-    }],
-    "enemyList": [{
-      "enemy": {
-        "name": "blob",
+    ],
+    "powerUpList":[
+      {
+        "type": "mushroom",
+        "width": 20,
+        "height": 20,
+        "XPos": 1560,
+        "YPos": 305,
+        "imagePath": "src/main/resources/mushroom.jpeg"
+      }
+    ],
+    "enemyList": [
+      {
+        "type": "blob",
         "colour": "green",
         "direction": "left-to-right",
         "jump": 0,
@@ -52,7 +56,15 @@
         "startPlatform": "p1",
         "imagePath": "src/main/resources/mushroom.jpeg"
       },
-      "enemy": {
+      {
+        "type": "blob",
+        "colour": "purple",
+        "direction": "right-to-left",
+        "jump": 0,
+        "attack": "none",
+        "startPlatform": "p2"
+      },
+      {
         "name": "blob",
         "colour": "purple",
         "direction": "right-to-left",
@@ -60,15 +72,7 @@
         "attack": "none",
         "startPlatform": "p2"
       },
-      "enemy": {
-        "name": "blob",
-        "colour": "purple",
-        "direction": "right-to-left",
-        "jump": 0,
-        "attack": "none",
-        "startPlatform": "p2"
-      },
-      "enemy": {
+      {
         "name": "yoshi",
         "direction": "right-to-left",
         "jump": 10,
@@ -78,6 +82,6 @@
         "moveBoundaryLeft": 1080,
         "moveBoundaryRight": 1480
       }
-    }]
+    ]
   }
 }

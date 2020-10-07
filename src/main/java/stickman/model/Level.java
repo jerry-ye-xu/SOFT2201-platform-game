@@ -1,5 +1,7 @@
 package stickman.model;
 
+import stickman.view.Platform;
+
 import java.util.List;
 
 public interface Level {

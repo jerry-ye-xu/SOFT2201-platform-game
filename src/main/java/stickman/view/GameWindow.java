@@ -38,6 +38,8 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
 
         backgroundDrawer.draw(model, pane);
+
+        this.pane.getChildren().add(this.model.getCurrentLevel().getPlatforms().get(0).getHBox());
     }
 
     public Scene getScene() {

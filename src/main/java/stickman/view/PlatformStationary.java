@@ -1,4 +1,7 @@
-package stickman.model;
+package stickman.view;
+
+import stickman.model.Layer;
+import javafx.scene.layout.HBox;
 
 public class PlatformStationary implements Platform {
 
@@ -8,18 +11,22 @@ public class PlatformStationary implements Platform {
     protected final String imagePath;
     protected final Layer layer;
 
+    protected final HBox platformHBox;
+
     public PlatformStationary(
         double startWidth,
         double endWidth,
         double height,
         String imagePath,
-        Layer layer
+        Layer layer,
+        HBox platformHBox
     ) {
         this.startWidth = startWidth;
         this.endWidth = endWidth;
         this.height = height;
         this.imagePath = imagePath;
         this.layer = layer;
+        this.platformHBox = platformHBox;
     }
 
     @Override
@@ -46,4 +53,7 @@ public class PlatformStationary implements Platform {
     public Layer getLayer() {
         return this.layer;
     }
+
+    @Override
+    public HBox getHBox() { return this.platformHBox; }
 }
