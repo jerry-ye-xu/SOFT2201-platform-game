@@ -35,11 +35,11 @@ public class App extends Application {
         System.out.println(getClass().getResource("/foot_tile.png"));
 
         GameEngine model = new GameEngineImpl(configPath, levelName);
-        System.out.println("bob");
+//        System.out.println("bob");
         GameWindow window = new GameWindow(model, 640, 400);
-        System.out.println("bob");
+//        System.out.println("bob");
         window.run();
-        System.out.println("bob");
+//        System.out.println("bob");
 
         primaryStage.setTitle("Stickman");
         primaryStage.setScene(window.getScene());
@@ -71,8 +71,6 @@ public class App extends Application {
             ioe.printStackTrace();
         }
 
-        System.out.println("jsonDict is...");
-        System.out.println(jsonDict);
         return jsonDict;
     }
 }

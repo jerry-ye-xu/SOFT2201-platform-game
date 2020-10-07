@@ -7,6 +7,8 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.net.URL;
+
 public class EntityViewImpl implements EntityView {
     private Entity entity;
     private boolean delete = false;
@@ -15,8 +17,9 @@ public class EntityViewImpl implements EntityView {
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
-        this.imagePath = entity.getImagePath();
-        this.node = new ImageView(imagePath);
+        this.imagePath = this.entity.getImagePath();
+        URL imageURL = this.getClass().getResource(this.imagePath);
+        this.node = new ImageView(imageURL.toExternalForm());
         this.node.setViewOrder(getViewOrder(entity.getLayer()));
         this.update(0);
     }

@@ -3,15 +3,15 @@
   "stickmanStartingPos": 20.0,
   "cloudVelocity": 3.2,
   "levelOne": {
-    "height": 800,
+    "height": 400,
     "width": 2560,
-    "floorHeight": 150,
+    "floorHeight": 350,
     "flagPosition": {
-      "height": 15,
-      "width": 15,
-      "XPos": 1560,
-      "YPos": 305,
-      "imageName": "src/main/resources/flag.jpeg"
+      "height": 40,
+      "width": 40,
+      "XPos": 375,
+      "YPos": 315,
+      "imageName": "/flag.jpeg"
     },
     "platformList": [
       {
@@ -25,24 +25,32 @@
         "type": "stationary",
         "startWidth": 850,
         "endWidth": 1200,
-        "height": 350,
+        "height": 200,
         "imageName": "/foot_tile.png"
       },
       {
         "type": "stationary",
         "startWidth": 1550,
         "endWidth": 1700,
-        "height": 300,
+        "height": 250,
         "imageName": "/foot_tile.png"
       }
     ],
     "powerUpList":[
       {
         "type": "mushroom",
-        "width": 20,
-        "height": 20,
-        "XPos": 1560,
-        "YPos": 305,
+        "width": 30,
+        "height": 30,
+        "XPos": 375,
+        "YPos": 230,
+        "imageName": "/mushroom.jpeg"
+      },
+      {
+        "type": "mushroom",
+        "width": 30,
+        "height": 30,
+        "XPos": 295,
+        "YPos": 1600,
         "imageName": "/mushroom.jpeg"
       }
     ],

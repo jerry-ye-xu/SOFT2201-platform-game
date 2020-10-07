@@ -1,5 +1,7 @@
 package stickman.model;
 
+import java.net.URL;
+
 public class EntityImpl implements Entity {
 
     protected final double width;
@@ -21,7 +23,15 @@ public class EntityImpl implements Entity {
         this.height = height;
         this.XPos = XPos;
         this.YPos = YPos;
-        this.imagePath = imagePath;
+//        URL imageURL = this.getClass().getResource(imagePath);
+//        System.out.println("imagePath");
+//        System.out.println(imagePath);
+//        System.out.println("imageUrl");
+//        System.out.println("imageURL.toExternalForm()");
+//        System.out.println(imageURL);
+//        System.out.println(imageURL.toExternalForm());
+//        this.imagePath = imageURL.toExternalForm();
+        this.imagePath= imagePath;
         this.layer = layer;
     }
 

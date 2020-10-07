@@ -26,7 +26,7 @@ public class GameWindow {
         this.model = model;
         this.pane = new Pane();
         this.width = width;
-        this.scene = new Scene(pane, width, height);
+        this.scene = new Scene(this.pane, width, height);
 
         this.entityViews = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class GameWindow {
 
         this.backgroundDrawer = new BlockedBackground();
 
-        backgroundDrawer.draw(model, pane);
+        this.backgroundDrawer.draw(model, this.pane);
 
         this.pane.getChildren().add(this.model.getCurrentLevel().getPlatforms().get(0).getHBox());
     }
@@ -55,7 +55,7 @@ public class GameWindow {
     }
 
     private void draw() {
-        model.tick();
+        this.model.tick();
 
         List<Entity> entities = model.getCurrentLevel().getEntities();
 
@@ -83,12 +83,16 @@ public class GameWindow {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {
+//                    System.out.println("GameWindow view.matchesEntity(entity)");
+//                    System.out.println(entity);
                     notFound = false;
                     view.update(xViewportOffset);
                     break;
                 }
             }
             if (notFound) {
+//                System.out.println("GameWindow view.matchesEntity(entity): notFound = false");
+//                System.out.println(entity);
                 EntityView entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
                 pane.getChildren().add(entityView.getNode());

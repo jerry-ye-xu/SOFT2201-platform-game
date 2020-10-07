@@ -2,7 +2,9 @@ package stickman.model;
 
 import org.json.simple.JSONObject;
 
-public class PowerUpEntityFactory implements EntityFactory {
+import java.net.URL;
+
+public class EntityPowerUpFactory implements EntityFactory {
 
     @Override
     public Entity createEntity(String entityType, JSONObject entityProperties) {
@@ -18,8 +20,8 @@ public class PowerUpEntityFactory implements EntityFactory {
         final double height = ((Long) entityProperties.get("height")).doubleValue();
         final double XPos = ((Long) entityProperties.get("XPos")).doubleValue();
         final double YPos = ((Long) entityProperties.get("YPos")).doubleValue();
-        final String imagePath = (String) entityProperties.get("imagePath");
-        final Layer layer = Layer.FOREGROUND;
+        final String imagePath = (String) entityProperties.get("imageName");
+        final Layer layer = Layer.BACKGROUND;
 
         Entity mushroomInstance = new EntityMushroomImpl(
             width,

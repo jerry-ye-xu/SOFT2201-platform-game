@@ -24,7 +24,6 @@ public class GameEngineImpl implements GameEngine {
     public GameEngineImpl(String jsonConfigPath, String levelName) {
         // @TODO: Read JSON config
         this.jsonDict = parseJsonConfig(jsonConfigPath);
-        System.out.println(this.jsonDict.get("stickmanSize"));
         this.levelName = levelName;
         this.gameLevel = this.buildLevel(levelName);
     }
@@ -86,9 +85,12 @@ public class GameEngineImpl implements GameEngine {
         entityList.addAll(powerUpList);
         entityList.add(flag);
 
-        double height = (double) levelDict.get("height");
-        double width = (double) levelDict.get("width");
-        double floorHeight = (double) levelDict.get("floorHeight");
+        System.out.println("entityList.size()");
+        System.out.println(entityList.size());
+
+        double height = ((Long) levelDict.get("height")).doubleValue();
+        double width = ((Long) levelDict.get("width")).doubleValue();
+        double floorHeight = ((Long) levelDict.get("floorHeight")).doubleValue();
 
         Level gameLevel = new LevelImpl(
             platformList,
@@ -117,7 +119,7 @@ public class GameEngineImpl implements GameEngine {
 
     private List<Entity> buildPowerUpEntities(JSONArray arrayJSON) {
         List<Entity> objList = new ArrayList<>();
-        EntityFactory entityFactory = new PowerUpEntityFactory();
+        EntityFactory entityFactory = new EntityPowerUpFactory();
 
         for (Object obj: arrayJSON) {
             JSONObject objJSON = (JSONObject) obj;
@@ -134,7 +136,7 @@ public class GameEngineImpl implements GameEngine {
         final double height = ((Long) objJSON.get("height")).doubleValue();
         final double XPos = ((Long) objJSON.get("XPos")).doubleValue();
         final double YPos = ((Long) objJSON.get("YPos")).doubleValue();
-        final String imagePath = (String) objJSON.get("imagePath");
+        final String imagePath = (String) objJSON.get("imageName");
         final Layer layer = Layer.FOREGROUND;
 
         Entity flag = new EntityFlagImpl(
