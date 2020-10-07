@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
@@ -32,6 +33,7 @@ public class GameWindow {
 
         KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(model);
 
+        scene.setFill(Color.TRANSPARENT);
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 

@@ -11,7 +11,7 @@
       "width": 40,
       "XPos": 375,
       "YPos": 315,
-      "imageName": "/flag.jpeg"
+      "imageName": "/flag.png"
     },
     "platformList": [
       {
@@ -42,8 +42,8 @@
         "width": 30,
         "height": 30,
         "XPos": 375,
-        "YPos": 230,
-        "imageName": "/mushroom.jpeg"
+        "YPos": 225,
+        "imageName": "/mushroom.png"
       },
       {
         "type": "mushroom",
@@ -51,7 +51,7 @@
         "height": 30,
         "XPos": 295,
         "YPos": 1600,
-        "imageName": "/mushroom.jpeg"
+        "imageName": "/mushroom.png"
       }
     ],
     "enemyList": [

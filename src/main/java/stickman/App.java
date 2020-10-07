@@ -2,6 +2,7 @@ package stickman;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -42,6 +43,7 @@ public class App extends Application {
 //        System.out.println("bob");
 
         primaryStage.setTitle("Stickman");
+//        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(window.getScene());
         primaryStage.show();
 
