@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 import stickman.model.Layer;
 
 import java.lang.UnsupportedOperationException;
+import java.net.URL;
 
 public class PlatformFactoryImpl implements PlatformFactory {
 
@@ -23,11 +24,24 @@ public class PlatformFactoryImpl implements PlatformFactory {
     }
 
     private Platform createPlatformStationary(JSONObject platformProperties) {
-        final double startWidth = (double) platformProperties.get("startWidth");
-        final double endWidth = (double) platformProperties.get("endWidth");
-        final double height = (double) platformProperties.get("height");
-        final String imagePath = (String) platformProperties.get("imagePath");
+        System.out.println("platformProperties.get(\"startWidth\")");
+        System.out.println(((Object) platformProperties.get("startWidth")).getClass().getName());
+        System.out.println(platformProperties.get("startWidth"));
+        final double startWidth = ((Long) platformProperties.get("startWidth")).doubleValue();
+        final double endWidth = ((Long) platformProperties.get("endWidth")).doubleValue();
+        final double height = ((Long) platformProperties.get("height")).doubleValue();
+        final URL imageURL = this.getClass().getResource((String) platformProperties.get("imageName"));
+
+        System.out.println("(String) platformProperties.get(\"imageName\")");
+        System.out.println((String) platformProperties.get("imageName"));
+        System.out.println("imageURL");
+        System.out.println(imageURL);
+        String imagePath = imageURL.toExternalForm();
         final Layer layer = Layer.FOREGROUND;
+        System.out.println("imageURL");
+        System.out.println(imageURL);
+        System.out.println("imagePath");
+        System.out.println(imagePath);
 
 //        TilePane platformTiles = new TilePane();
         HBox platformHBox = new HBox();

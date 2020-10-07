@@ -130,10 +130,10 @@ public class GameEngineImpl implements GameEngine {
 
     private Entity buildFlagEntity(JSONObject objJSON) {
         // No need to loop through an array since there can only be 1 flag per level.
-        final double width = (double) objJSON.get("width");
-        final double height = (double) objJSON.get("height");
-        final double XPos = (double) objJSON.get("XPos");
-        final double YPos = (double) objJSON.get("YPos");
+        final double width = ((Long) objJSON.get("width")).doubleValue();
+        final double height = ((Long) objJSON.get("height")).doubleValue();
+        final double XPos = ((Long) objJSON.get("XPos")).doubleValue();
+        final double YPos = ((Long) objJSON.get("YPos")).doubleValue();
         final String imagePath = (String) objJSON.get("imagePath");
         final Layer layer = Layer.FOREGROUND;
 

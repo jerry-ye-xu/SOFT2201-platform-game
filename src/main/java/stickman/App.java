@@ -24,57 +24,28 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-//        Map<String, String> params = this.getParameters().getNamed();
-//
+        Map<String, String> params = this.getParameters().getNamed();
+
 //        String levelName = params.get("levelName");
 //        String configPath = params.get("configPath");
 
         String configPath = "config.json";
         String levelName = "levelOne";
 
-        JSONObject jsonObj = this.parseJsonConfig("config.json");
-        System.out.println(jsonObj);
+        System.out.println(getClass().getResource("/foot_tile.png"));
 
-        System.out.println(jsonObj.get("stickmanStartingPos"));
-        System.out.println(jsonObj.get("stickmanSize"));
-        System.out.println(jsonObj.get("cloudVelocity"));
-        System.out.println(jsonObj.get("levelOne"));
+        GameEngine model = new GameEngineImpl(configPath, levelName);
+        System.out.println("bob");
+        GameWindow window = new GameWindow(model, 640, 400);
+        System.out.println("bob");
+        window.run();
+        System.out.println("bob");
 
-        JSONObject levelDict = (JSONObject) jsonObj.get(levelName);
+        primaryStage.setTitle("Stickman");
+        primaryStage.setScene(window.getScene());
+        primaryStage.show();
 
-        System.out.println("levelDict");
-        System.out.println(levelDict);
-
-        JSONArray platformArrayJSON = parseJsonArray(levelDict, "powerUpList");
-
-        System.out.println("platformArrayJSON");
-        System.out.println(platformArrayJSON);
-
-        JSONArray arrayJSON = platformArrayJSON;
-
-        for (Object obj: arrayJSON) {
-            JSONObject objJSON = (JSONObject) obj;
-            String objType = (String) objJSON.get("type");
-            System.out.println("objType");
-            System.out.println(objType);
-            System.out.println("XPos");
-            System.out.println(objJSON.get("XPos"));
-        }
-
-//        System.out.println(platformArrayJSON.get("platform"));
-
-//        GameEngine model = new GameEngineImpl(configPath, levelName);
-//        System.out.println("bob");
-//        GameWindow window = new GameWindow(model, 640, 400);
-//        System.out.println("bob");
-//        window.run();
-//        System.out.println("bob");
-
-//        primaryStage.setTitle("Stickman");
-//        primaryStage.setScene(window.getScene());
-//        primaryStage.show();
-//
-//        window.run();
+        window.run();
     }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {

@@ -14,10 +14,10 @@ public class PowerUpEntityFactory implements EntityFactory {
     }
 
     private Entity createMushroomEntity(JSONObject entityProperties) {
-        final double width = (double) entityProperties.get("width");
-        final double height = (double) entityProperties.get("height");
-        final double XPos = (double) entityProperties.get("XPos");
-        final double YPos = (double) entityProperties.get("YPos");
+        final double width = ((Long) entityProperties.get("width")).doubleValue();
+        final double height = ((Long) entityProperties.get("height")).doubleValue();
+        final double XPos = ((Long) entityProperties.get("XPos")).doubleValue();
+        final double YPos = ((Long) entityProperties.get("YPos")).doubleValue();
         final String imagePath = (String) entityProperties.get("imagePath");
         final Layer layer = Layer.FOREGROUND;
 

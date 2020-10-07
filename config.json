@@ -11,7 +11,7 @@
       "width": 15,
       "XPos": 1560,
       "YPos": 305,
-      "imagePath": "src/main/resources/flag.jpeg"
+      "imageName": "src/main/resources/flag.jpeg"
     },
     "platformList": [
       {
@@ -19,21 +19,21 @@
         "startWidth": 350,
         "endWidth": 700,
         "height": 250,
-        "imagePath": "src/main/resources/foot_tile.png"
+        "imageName": "/foot_tile.png"
       },
       {
         "type": "stationary",
         "startWidth": 850,
         "endWidth": 1200,
         "height": 350,
-        "imagePath": "src/main/resources/foot_tile.png"
+        "imageName": "/foot_tile.png"
       },
       {
         "type": "stationary",
         "startWidth": 1550,
         "endWidth": 1700,
         "height": 300,
-        "imagePath": "src/main/resources/foot_tile.png"
+        "imageName": "/foot_tile.png"
       }
     ],
     "powerUpList":[
@@ -43,7 +43,7 @@
         "height": 20,
         "XPos": 1560,
         "YPos": 305,
-        "imagePath": "src/main/resources/mushroom.jpeg"
+        "imageName": "/mushroom.jpeg"
       }
     ],
     "enemyList": [
@@ -54,11 +54,10 @@
         "jump": 0,
         "attack": "none",
         "startPlatform": "p1",
-        "imagePath": "src/main/resources/mushroom.jpeg"
       },
       {
         "type": "blob",
-        "colour": "purple",
+        "colour": "yellow",
         "direction": "right-to-left",
         "jump": 0,
         "attack": "none",
