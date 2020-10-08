@@ -3,11 +3,13 @@ package stickman.view;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
+import stickman.model.Stickman;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public class GameWindow {
     private Scene scene;
     private Pane pane;
     private GameEngine model;
+    private ImageView previousStickmanFrame;
     private List<EntityView> entityViews;
     private BackgroundDrawer backgroundDrawer;
 
@@ -40,9 +43,15 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
 
         this.backgroundDrawer.draw(model, this.pane);
-
-        this.pane.getChildren().add(this.model.getCurrentLevel().getPlatforms().get(0).getHBox());
+        this.addStationaryEntities(model, this.pane);
+//        this.addCharacter(model, this.pane);
     }
+
+//    private void addCharacter(GameEngine model, Pane pane) {
+//        Stickman stickman = model.getStickman();
+//        this.previousStickmanFrame = stickman.updateFrame();
+//        pane.getChildren().add(this.previousStickmanFrame);
+//    }
 
     public Scene getScene() {
         return this.scene;
@@ -58,14 +67,15 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
+        this.refreshStickmanFrame(this.model);
 
-        List<Entity> entities = model.getCurrentLevel().getEntities();
+        List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
         for (EntityView entityView: entityViews) {
             entityView.markForDelete();
         }
 
-        double heroXPos = model.getCurrentLevel().getHeroX();
+        double heroXPos = model.getStickman().getXPosition();
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
@@ -107,5 +117,22 @@ public class GameWindow {
             }
         }
         entityViews.removeIf(EntityView::isMarkedForDelete);
+    }
+
+    private void refreshStickmanFrame(GameEngine model) {
+        Stickman stickman = model.getStickman();
+        this.pane.getChildren().remove(this.previousStickmanFrame);
+        stickman.setFrameCount(stickman.getFrameCount() + 1);
+        this.previousStickmanFrame = stickman.updateFrame();
+        this.pane.getChildren().add(this.previousStickmanFrame);
+        stickman.setFrameCount(0);
+    }
+
+    private void addStationaryEntities(GameEngine model, Pane pane) {
+        List<Platform> platformList = model.getCurrentLevel().getPlatforms();
+
+        for (Platform platform: platformList) {
+            pane.getChildren().add(platform.getHBox());
+        }
     }
 }

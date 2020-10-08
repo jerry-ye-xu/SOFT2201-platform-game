@@ -5,6 +5,8 @@ public interface GameEngine {
 
     void startLevel();
 
+    Stickman getStickman();
+
     // Hero inputs - boolean for success (possibly for sound feedback)
     boolean jump();
     boolean moveLeft();

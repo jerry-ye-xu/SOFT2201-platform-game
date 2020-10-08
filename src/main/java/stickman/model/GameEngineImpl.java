@@ -20,11 +20,13 @@ public class GameEngineImpl implements GameEngine {
     private JSONObject jsonDict;
     private String levelName;
     private Level gameLevel;
+    private Stickman stickman;
 
     public GameEngineImpl(String jsonConfigPath, String levelName) {
         // @TODO: Read JSON config
-        this.jsonDict = parseJsonConfig(jsonConfigPath);
         this.levelName = levelName;
+        this.jsonDict = parseJsonConfig(jsonConfigPath);
+        this.stickman = this.buildStickman(levelName);
         this.gameLevel = this.buildLevel(levelName);
     }
 
@@ -39,28 +41,53 @@ public class GameEngineImpl implements GameEngine {
     }
 
     @Override
+    public Stickman getStickman() {
+        return this.stickman;
+    }
+
+    @Override
     public boolean jump() {
-        return false;
+        if (this.stickman.canJump) {
+            System.out.println("this.stickman.jump()");
+            this.stickman.jump();
+            System.out.println(this.stickman.getYPosition());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean moveLeft() {
-        return false;
+        this.stickman.setMovement(true, false);
+        return true;
     }
 
     @Override
     public boolean moveRight() {
-        return false;
+        this.stickman.setMovement(false, true);
+        return true;
     }
 
     @Override
     public boolean stopMoving() {
-        return false;
+        this.stickman.setMovement(false, false);
+        return true;
     }
 
     @Override
     public void tick() {
+//        System.out.println("this.stickman");
+        this.stickman.updateXPos(this.gameLevel);
+        this.stickman.updateYPos(this.gameLevel);
+//        System.out.println(this.stickman.getXPosition());
+//        System.out.println(this.stickman.getYPosition());
+//        System.out.println("this.updateXPos(this.gameLevel)");
+//        System.out.println("this.updateYPos(this.gameLevel)");
 
+//        this.getCurrentLevel().setHeroX();
+
+        // Update non-stationary objects here.
     }
 
     /*
@@ -163,6 +190,25 @@ public class GameEngineImpl implements GameEngine {
 //
 //        return objList;
 //    }
+
+    private Stickman buildStickman(String levelName) {
+        JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
+
+        String size = (String) this.jsonDict.get("stickmanSize");
+        double startingXPos = (Double) this.jsonDict.get("stickmanStartingPos");
+        double startingYPos = ((Long) levelDict.get("floorHeight")).doubleValue();
+
+        final Layer layer = Layer.FOREGROUND;
+
+        Stickman stickman = new Stickman(
+            size,
+            startingXPos,
+            startingYPos,
+            layer
+        );
+
+        return stickman;
+    }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {
         JSONArray itemList = (JSONArray) jsonDict.get(jsonList);

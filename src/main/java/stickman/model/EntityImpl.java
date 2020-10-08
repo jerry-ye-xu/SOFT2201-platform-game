@@ -6,8 +6,8 @@ public class EntityImpl implements Entity {
 
     protected final double width;
     protected final double height;
-    protected final double XPos;
-    protected final double YPos;
+    protected double XPos;
+    protected double YPos;
     protected final String imagePath;
     protected final Layer layer;
 

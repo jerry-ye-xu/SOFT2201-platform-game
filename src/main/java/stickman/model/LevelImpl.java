@@ -11,7 +11,7 @@ public class LevelImpl implements Level{
     protected double height;
     protected double width;
     protected double floorHeight;
-    protected double heroStartingXPosition;
+    protected double heroXPosition;
 
     public LevelImpl(
         List<Platform> arrayPlatforms,
@@ -19,14 +19,14 @@ public class LevelImpl implements Level{
         double height,
         double width,
         double floorHeight,
-        double heroStartingXPosition
+        double heroXPosition
     ) {
         this.arrayPlatforms = arrayPlatforms;
         this.arrayEntities = arrayEntities;
         this.height = height;
         this.width = width;
         this.floorHeight = floorHeight;
-        this.heroStartingXPosition = heroStartingXPosition;
+        this.heroXPosition = heroXPosition;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class LevelImpl implements Level{
 
     @Override
     public double getHeroX() {
-        return this.heroStartingXPosition;
+        return this.heroXPosition;
     }
 
     @Override
