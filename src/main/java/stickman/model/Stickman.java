@@ -33,7 +33,7 @@ public class Stickman {
     protected boolean mushroomPowerUp = false;
     protected boolean winStatus = false;
 
-    protected final int frameCountRate = 0;
+    protected final int frameCountRate = 60;
     protected int frameCount = 0;
     protected int frameIdx = 0;
     protected ImageView currentFrame;
@@ -180,44 +180,42 @@ public class Stickman {
     public ImageView updateFrame() {
         // If jumping, then reset frameIdx;
         System.out.println("this.frameCount: " + frameCount);
-        this.frameCount += 1;
 //        if (!this.canJump) {
 //            this.frameIdx = 0;
 //            String imagePath = walkLeftFrames.get(this.frameIdx);
 //            return buildStickmanImage(imagePath);
 //        }
-
+        String imagePath;
         if (this.movingRight) {
-            if (this.doUpdateFrame()) {
+            if (doUpdateFrame()) {
                 this.frameIdx = (this.frameIdx + 1) % this.numFramesMoveRight;
             }
 
-            String imagePath = walkRightFrames.get(this.frameIdx);
-            return buildStickmanImage(imagePath);
+            imagePath = walkRightFrames.get(this.frameIdx);
 
         } else if (this.movingLeft) {
-            if (this.doUpdateFrame()) {
+            if (doUpdateFrame()) {
                 this.frameIdx = (this.frameIdx + 1) % this.numFramesMoveLeft;
             }
 
-            String imagePath = walkLeftFrames.get(this.frameIdx);
-            return buildStickmanImage(imagePath);
+            imagePath = walkLeftFrames.get(this.frameIdx);
 
         } else {
             if (this.facingL) {
-                if (this.doUpdateFrame()) {
+                if (doUpdateFrame()) {
                     this.frameIdx = (this.frameIdx + 1) % this.numFramesStillLeft;
                 }
-                String imagePath = standingLeftFrames.get(this.frameIdx);
-                return buildStickmanImage(imagePath);
+                imagePath = standingLeftFrames.get(this.frameIdx);
+
             } else {
-                if (this.doUpdateFrame()) {
+                if (doUpdateFrame()) {
                     this.frameIdx = (this.frameIdx + 1) % this.numFramesStillRight;
                 }
-                String imagePath = standingRightFrames.get(this.frameIdx);
-                return buildStickmanImage(imagePath);
+                imagePath = standingRightFrames.get(this.frameIdx);
+
             }
         }
+        return buildStickmanImage(imagePath);
     }
 
     private ImageView buildStickmanImage(
@@ -280,10 +278,13 @@ public class Stickman {
         return imageFrames;
     }
 
-    private boolean doUpdateFrame() {
+    public boolean doUpdateFrame() {
         if (frameCount == frameCountRate) {
+            System.out.println("frameCount == frameCountRate");
+            frameCount = 0;
             return true;
         } else {
+            System.out.println("else");
             frameCount += 1;
             return false;
         }

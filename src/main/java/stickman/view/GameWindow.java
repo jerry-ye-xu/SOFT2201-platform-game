@@ -122,10 +122,8 @@ public class GameWindow {
     private void refreshStickmanFrame(GameEngine model) {
         Stickman stickman = model.getStickman();
         this.pane.getChildren().remove(this.previousStickmanFrame);
-        stickman.setFrameCount(stickman.getFrameCount() + 1);
         this.previousStickmanFrame = stickman.updateFrame();
         this.pane.getChildren().add(this.previousStickmanFrame);
-        stickman.setFrameCount(0);
     }
 
     private void addStationaryEntities(GameEngine model, Pane pane) {
