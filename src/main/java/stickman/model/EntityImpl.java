@@ -4,6 +4,7 @@ import java.net.URL;
 
 public class EntityImpl implements Entity {
 
+    protected final String type;
     protected final double width;
     protected final double height;
     protected double XPos;
@@ -12,6 +13,7 @@ public class EntityImpl implements Entity {
     protected final Layer layer;
 
     public EntityImpl(
+        String type,
         double width,
         double height,
         double XPos,
@@ -19,6 +21,7 @@ public class EntityImpl implements Entity {
         String imagePath,
         Layer layer
     ) {
+        this.type = type;
         this.width = width;
         this.height = height;
         this.XPos = XPos;
@@ -26,6 +29,9 @@ public class EntityImpl implements Entity {
         this.imagePath= imagePath;
         this.layer = layer;
     }
+
+    @Override
+    public String getType() { return this.type; }
 
     @Override
     public double getWidth() {

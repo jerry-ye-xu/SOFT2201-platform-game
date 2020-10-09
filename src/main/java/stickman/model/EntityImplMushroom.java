@@ -4,6 +4,7 @@ import stickman.view.EntityViewStickman;
 
 public class EntityImplMushroom extends EntityImpl {
     public EntityImplMushroom(
+        String type,
         double width,
         double height,
         double XPos,
@@ -11,7 +12,7 @@ public class EntityImplMushroom extends EntityImpl {
         String imagePath,
         Layer layer
     ) {
-        super(width, height, XPos, YPos, imagePath, layer);
+        super(type, width, height, XPos, YPos, imagePath, layer);
     }
 
     public void powerUpStickman(EntityViewStickman entityViewStickman) {

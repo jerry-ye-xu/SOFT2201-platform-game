@@ -3,6 +3,7 @@ package stickman.model;
 public class EntityImplTile extends EntityImpl {
 
     public EntityImplTile(
+        String type,
         double width,
         double height,
         double XPos,
@@ -10,6 +11,6 @@ public class EntityImplTile extends EntityImpl {
         String imagePath,
         Layer layer
     ) {
-        super(width, height, XPos, YPos, imagePath, layer);
+        super(type, width, height, XPos, YPos, imagePath, layer);
     }
 }

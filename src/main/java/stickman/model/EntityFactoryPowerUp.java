@@ -22,6 +22,7 @@ public class EntityFactoryPowerUp implements EntityFactory {
         final Layer layer = Layer.ENTITY_LAYER;
 
         Entity mushroomInstance = new EntityImplMushroom(
+            "mushroom",
             width,
             height,
             XPos,

@@ -2,6 +2,7 @@ package stickman.model;
 
 public class EntityImplStickman extends EntityImpl {
     public EntityImplStickman(
+            String type,
             double width,
             double height,
             double XPos,
@@ -10,6 +11,6 @@ public class EntityImplStickman extends EntityImpl {
             Layer layer
 
     ) {
-        super(width, height, XPos, YPos, imagePath, layer);
+        super(type, width, height, XPos, YPos, imagePath, layer);
     }
 }

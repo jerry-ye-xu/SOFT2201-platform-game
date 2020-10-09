@@ -9,6 +9,7 @@ public class EntityImplBlob extends EntityImpl implements EntityEnemy {
     protected String imagePathEnd;
 
     public EntityImplBlob(
+        String type,
         double width,
         double height,
         double XPos,
@@ -22,7 +23,7 @@ public class EntityImplBlob extends EntityImpl implements EntityEnemy {
         String imagePathStart,
         String imagePathEnd
     ) {
-        super(width, height, XPos, YPos, imagePath, layer);
+        super(type, width, height, XPos, YPos, imagePath, layer);
 
         this.jumpHeight = jumpHeight;
         this.attack = attack;

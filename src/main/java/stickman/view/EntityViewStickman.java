@@ -205,16 +205,16 @@ public class EntityViewStickman extends EntityViewImplMoving {
     @Override
     public void update(double xViewportOffset) {
         String imagePath = this.chooseFrame();
-        System.out.println("BEFORE stickman UPDATE");
-        System.out.println("xPosition: " + xPosition);
-        System.out.println("xViewportOffset: " + xViewportOffset);
+//        System.out.println("BEFORE stickman UPDATE");
+//        System.out.println("xPosition: " + xPosition);
+//        System.out.println("xViewportOffset: " + xViewportOffset);
         if (!this.imagePath.equals(imagePath)) {
             this.imagePath = imagePath;
             this.node.setImage(new Image(this.imagePath));
         }
-        System.out.println("AFTER stickman UPDATE");
-        System.out.println("xPosition: " + xPosition);
-        System.out.println("xViewportOffset: " + xViewportOffset);
+//        System.out.println("AFTER stickman UPDATE");
+//        System.out.println("xPosition: " + xPosition);
+//        System.out.println("xViewportOffset: " + xViewportOffset);
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
         this.node.setFitWidth(this.width);

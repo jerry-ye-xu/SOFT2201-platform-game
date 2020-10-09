@@ -71,9 +71,9 @@ public class GameWindow {
 
         this.refreshStickmanFrame(this.model, xViewportOffset);
         double heroXPos = model.getEntityViewStickman().getXPosition();
-        System.out.println("BEFORE -= xViewportOffset");
-        System.out.println("xViewportOffset: " + xViewportOffset);
-        System.out.println("heroXPos: " + heroXPos);
+//        System.out.println("BEFORE -= xViewportOffset");
+//        System.out.println("xViewportOffset: " + xViewportOffset);
+//        System.out.println("heroXPos: " + heroXPos);
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
@@ -84,11 +84,11 @@ public class GameWindow {
                 }
             }
         } else if (heroXPos > width - VIEWPORT_MARGIN) {
-            System.out.println("MOVING THE FRAME...");
-            System.out.println("heroXPos: " + heroXPos);
-            System.out.println("xViewportOffset: " + xViewportOffset);
+//            System.out.println("MOVING THE FRAME...");
+//            System.out.println("heroXPos: " + heroXPos);
+//            System.out.println("xViewportOffset: " + xViewportOffset);
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
-            System.out.println("xViewportOffset: " + xViewportOffset);
+//            System.out.println("xViewportOffset: " + xViewportOffset);
 
             double stickmanWidth = this.model.getEntityViewStickman().getWidth();
 
@@ -97,11 +97,11 @@ public class GameWindow {
             }
         }
 
-        System.out.println("AFTER updating xViewportOffset");
-        System.out.println("heroXPos: " + heroXPos);
-        System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
-        System.out.println("width: " + width);
-        System.out.println("xViewportOffset: " + xViewportOffset);
+//        System.out.println("AFTER updating xViewportOffset");
+//        System.out.println("heroXPos: " + heroXPos);
+//        System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
+//        System.out.println("width: " + width);
+//        System.out.println("xViewportOffset: " + xViewportOffset);
 
         backgroundDrawer.update(xViewportOffset);
 
@@ -115,7 +115,12 @@ public class GameWindow {
                 }
             }
             if (notFound) {
-                EntityView entityView = new EntityViewImpl(entity);
+                EntityView entityView;
+                if (entity.getType().equals("blob")) {
+                    entityView = new EntityViewBlob(entity);
+                } else {
+                    entityView = new EntityViewImpl(entity);
+                }
                 entityViews.add(entityView);
                 pane.getChildren().add(entityView.getNode());
             }

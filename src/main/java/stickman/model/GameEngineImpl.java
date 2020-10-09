@@ -20,6 +20,10 @@ public class GameEngineImpl implements GameEngine {
     private Level gameLevel;
     private EntityViewStickman entityViewStickman;
 
+    private List<Entity> platformList;
+    private List<Entity> powerUpList;
+    private List<Entity> enemyList;
+
     public GameEngineImpl(String jsonConfigPath, String levelName) {
         // @TODO: Read JSON config
         this.levelName = levelName;
@@ -100,15 +104,18 @@ public class GameEngineImpl implements GameEngine {
         JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
         JSONArray enemyArrayJSON = parseJsonArray(levelDict, "enemyList");
 
-        List<Entity> platformList = this.buildPlatforms(platformArrayJSON);
-        List<Entity> powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
-//        List<Entity> enemyList = this.buildEnemyEntities(enemyArrayJSON);
+//        System.out.println("enemyArrayJSON: " + enemyArrayJSON);
+
+        this.platformList = this.buildPlatforms(platformArrayJSON);
+        this.powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
+        this.enemyList = this.buildEnemyEntities(enemyArrayJSON);
 
         Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
 
         List<Entity> entityList = new ArrayList<>();
         entityList.addAll(platformList);
         entityList.addAll(powerUpList);
+        entityList.addAll(enemyList);
         entityList.add(flag);
 
         System.out.println("entityList.size()");
@@ -167,6 +174,7 @@ public class GameEngineImpl implements GameEngine {
         final Layer layer = Layer.ENTITY_LAYER;
 
         Entity flag = new EntityImplFlag(
+            "flag",
             width,
             height,
             XPos,
@@ -178,18 +186,19 @@ public class GameEngineImpl implements GameEngine {
         return flag;
     }
 
-//    private List<Entity> buildEnemyEntities(JSONArray arrayJSON) {
-//        List<Entity> objList = new ArrayList<>();
-//        EntityFactory entityFactory = new EntityFactoryEnemy();
-//
-//        for (Object obj: arrayJSON) {
-//            JSONObject objJSON = (JSONObject) obj;
-//            String objType = (String) objJSON.get("type");
-//            objList.add(entityFactory.createEntity(objType, objJSON));
-//        }
-//
-//        return objList;
-//    }
+    private List<Entity> buildEnemyEntities(JSONArray arrayJSON) {
+        List<Entity> objList = new ArrayList<>();
+        EntityFactory entityFactory = new EntityFactoryEnemy();
+        for (Object obj: arrayJSON) {
+            JSONObject objJSON = (JSONObject) obj;
+            System.out.println("objJSON: " + objJSON);
+            String objType = (String) objJSON.get("type");
+            System.out.println("objType: " + objType);
+            objList.add(entityFactory.createEntity(objType, objJSON));
+        }
+
+        return objList;
+    }
 
     private EntityViewStickman buildStickman(String levelName) {
         JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
@@ -217,6 +226,7 @@ public class GameEngineImpl implements GameEngine {
         System.out.println("height: " + height);
 
         Entity stickmanEntity = new EntityImplStickman(
+            "stickman",
             width,
             height,
             startingXPos,

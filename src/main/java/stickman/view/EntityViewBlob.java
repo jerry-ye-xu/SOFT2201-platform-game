@@ -52,14 +52,15 @@ public class EntityViewBlob extends EntityViewImplMoving {
 
     @Override
     public void update(double xViewportOffset) {
-        String imagePath = this.chooseFrame();
+        String imagePath = this.imagePath;
 
         if (!this.imagePath.equals(imagePath)) {
             this.imagePath = imagePath;
             this.node.setImage(new Image(this.imagePath));
         }
-        this.updateXPos();
-        this.updateYPos();
+        updateXPos();
+        updateYPos();
+
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
         this.node.setFitWidth(this.width);
@@ -72,6 +73,11 @@ public class EntityViewBlob extends EntityViewImplMoving {
      */
 
     public void updateXPos() {
+        System.out.println("BLOB: this.xPosition - " + this.xPosition);
+        System.out.println("BLOB: this.startingXPos - " + this.startingXPos);
+        System.out.println("BLOB: this.movementRange - " + this.movementRange);
+        System.out.println("BLOB: this.movingRight - " + this.movingRight);
+        System.out.println("BLOB: this.movingLeft - " + this.movingLeft);
         if (this.xPosition < this.startingXPos - this.movementRange) {
             this.xPosition = this.startingXPos - this.movementRange;
             this.setMovement(false, true);

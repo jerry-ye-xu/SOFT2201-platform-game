@@ -32,6 +32,7 @@ public class EntityFactoryPlatformImpl implements EntityFactoryPlatform {
 
         for (int i=0; i<(endWidth-startWidth); i=i+singleTileWidth) {
             Entity tileInstance = new EntityImplTile(
+                "tile",
                 singleTileWidth,
                 singleTileHeight,
                 startWidth + i,

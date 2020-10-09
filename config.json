@@ -10,7 +10,7 @@
       "height": 40,
       "width": 40,
       "XPos": 375,
-      "YPos": 310,
+      "YPos": 1230,
       "imageName": "/flag.png"
     },
     "platformList": [
@@ -62,8 +62,8 @@
         "jumpHeight": 0,
         "attack": "none",
         "XPos": 575,
-        "YPos": 250,
-        "movement": 10
+        "YPos": 225,
+        "movementRange": 10
       },
       {
         "type": "blob",
@@ -73,17 +73,17 @@
         "attack": "none",
         "XPos": 950,
         "YPos": 150,
-        "movement": 15
+        "movementRange": 15
       },
       {
         "type": "blob",
         "colour": "purple",
         "startDirection": "right",
-        "jump": 0,
+        "jumpHeight": 0,
         "attack": "none",
         "XPos": 1125,
         "YPos": 225,
-        "movement": 25
+        "movementRange": 25
       }
     ]
   }

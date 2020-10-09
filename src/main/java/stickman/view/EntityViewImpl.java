@@ -17,8 +17,8 @@ public class EntityViewImpl implements EntityView {
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
-        System.out.println("Inside EntityViewImpl");
-        System.out.println("this.entity: " + this.entity);
+//        System.out.println("Inside EntityViewImpl");
+//        System.out.println("this.entity: " + this.entity);
         this.imagePath = this.entity.getImagePath();
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());

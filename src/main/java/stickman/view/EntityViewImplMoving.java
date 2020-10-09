@@ -30,8 +30,8 @@ public class EntityViewImplMoving extends EntityViewImpl {
 
     public EntityViewImplMoving(Entity entity) {
         super(entity);
-        System.out.println("Inside EntityViewImplMoving");
-        System.out.println("this.entity: " + this.entity);
+//        System.out.println("Inside EntityViewImplMoving");
+//        System.out.println("this.entity: " + this.entity);
         this.layer = this.entity.getLayer();
 
         this.width = this.entity.getWidth();
@@ -106,19 +106,5 @@ public class EntityViewImplMoving extends EntityViewImpl {
         }
 
         return imageFrames;
-    }
-
-    private void loadEntityFrames() { }
-
-    private String chooseFrame() { return this.entity.getImagePath(); }
-
-    private boolean doUpdateFrame() {
-        if (frameCount == frameCountRate) {
-            frameCount = 0;
-            return true;
-        } else {
-            frameCount += 1;
-            return false;
-        }
     }
 }

@@ -17,8 +17,8 @@ public class EntityFactoryEnemy implements EntityFactory {
     }
 
     private Entity createBlobEntity(JSONObject entityProperties) {
-        final double width = 36;
-        final double height = 36;
+        final double width = 35;
+        final double height = 35;
         final double XPos = ((Long) entityProperties.get("XPos")).doubleValue();
         final double YPos = ((Long) entityProperties.get("YPos")).doubleValue();
         final Layer layer = Layer.ENTITY_LAYER;
@@ -26,7 +26,7 @@ public class EntityFactoryEnemy implements EntityFactory {
         final double jumpHeight = ((Long) entityProperties.get("jumpHeight")).doubleValue();
         final String attack = (String) entityProperties.get("attack");
         final String startDirection = (String) entityProperties.get("startDirection");
-        final double movement = ((Long) entityProperties.get("movement")).doubleValue();
+        final double movement = ((Long) entityProperties.get("movementRange")).doubleValue();
 
         final String colour = (String) entityProperties.get("colour");
 
@@ -36,6 +36,7 @@ public class EntityFactoryEnemy implements EntityFactory {
         String imagePath = imagePathList.get(0) + "a" + imagePathList.get(1);
 
         Entity blobInstance = new EntityImplBlob(
+            "blob",
             width,
             height,
             XPos,
