@@ -9,8 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
+import stickman.model.Platform;
 import stickman.model.Stickman;
 
+import javax.swing.text.AsyncBoxView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +26,17 @@ public class GameWindow {
     private BackgroundDrawer backgroundDrawer;
 
     private double xViewportOffset = 0.0;
-    private static final double VIEWPORT_MARGIN = 280.0;
+    private static final double VIEWPORT_MARGIN = 320.0;
 
     public GameWindow(GameEngine model, int width, int height) {
         this.model = model;
         this.pane = new Pane();
         this.width = width;
-        this.scene = new Scene(this.pane, width, height);
+        this.scene = new Scene(
+                this.pane,
+                width,
+                height
+        );
 
         this.entityViews = new ArrayList<>();
 
@@ -43,15 +49,7 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
 
         this.backgroundDrawer.draw(model, this.pane);
-        this.addStationaryEntities(model, this.pane);
-//        this.addCharacter(model, this.pane);
     }
-
-//    private void addCharacter(GameEngine model, Pane pane) {
-//        Stickman stickman = model.getStickman();
-//        this.previousStickmanFrame = stickman.updateFrame();
-//        pane.getChildren().add(this.previousStickmanFrame);
-//    }
 
     public Scene getScene() {
         return this.scene;
@@ -67,7 +65,6 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
-        this.refreshStickmanFrame(this.model);
 
         List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
@@ -77,6 +74,28 @@ public class GameWindow {
 
         double heroXPos = model.getStickman().getXPosition();
         heroXPos -= xViewportOffset;
+        this.refreshStickmanFrame(this.model, xViewportOffset);
+
+//        if (heroXPos < VIEWPORT_MARGIN) {
+//            if (xViewportOffset >= 0) { // Don't go further left than the start of the level
+//                xViewportOffset += heroXPos - VIEWPORT_MARGIN;
+//                if (xViewportOffset < 0) {
+//                    xViewportOffset = 0;
+//                }
+//            }
+//        } else if (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)) {
+//            System.out.println("AT THE END OF THE LEVEL");
+//            System.out.println("this.model.getCurrentLevel().getWidth(): " + this.model.getCurrentLevel().getWidth());
+//            xViewportOffset += heroXPos - VIEWPORT_MARGIN;
+//            if (xViewportOffset > this.model.getCurrentLevel().getWidth() - width) {
+//                xViewportOffset = this.model.getCurrentLevel().getWidth() - width;
+//            }
+//        } else if (heroXPos > (width - VIEWPORT_MARGIN)) {
+//            System.out.println("heroXPos > width - VIEWPORT_MARGIN: " + (heroXPos > width - VIEWPORT_MARGIN));
+//            System.out.println("heroXPos: " + heroXPos);
+//            System.out.println("xViewportOffset: " + xViewportOffset);
+//            xViewportOffset = heroXPos - VIEWPORT_MARGIN;
+//        }
 
         if (heroXPos < VIEWPORT_MARGIN) {
             if (xViewportOffset >= 0) { // Don't go further left than the start of the level
@@ -89,22 +108,36 @@ public class GameWindow {
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
         }
 
+//        else if (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)) {
+//            System.out.println("heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN): " + (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)));
+//            if (xViewportOffset <= this.model.getCurrentLevel().getWidth()) {
+//                System.out.println("xViewportOffset: " + xViewportOffset);
+//                xViewportOffset += heroXPos + VIEWPORT_MARGIN;
+//                if (xViewportOffset > this.model.getCurrentLevel().getWidth()) {
+//                    System.out.println("xViewportOffset: " + xViewportOffset);
+//                    xViewportOffset += this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN;
+//                }
+//            }
+//        }
+
+
+        System.out.println("heroXPos: " + heroXPos);
+        System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
+        System.out.println("width: " + width);
+        System.out.println("xViewportOffset: " + xViewportOffset);
+
         backgroundDrawer.update(xViewportOffset);
 
         for (Entity entity: entities) {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {
-//                    System.out.println("GameWindow view.matchesEntity(entity)");
-//                    System.out.println(entity);
                     notFound = false;
                     view.update(xViewportOffset);
                     break;
                 }
             }
             if (notFound) {
-//                System.out.println("GameWindow view.matchesEntity(entity): notFound = false");
-//                System.out.println(entity);
                 EntityView entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
                 pane.getChildren().add(entityView.getNode());
@@ -119,18 +152,18 @@ public class GameWindow {
         entityViews.removeIf(EntityView::isMarkedForDelete);
     }
 
-    private void refreshStickmanFrame(GameEngine model) {
+    private void refreshStickmanFrame(GameEngine model, double xViewportOffset) {
         Stickman stickman = model.getStickman();
         this.pane.getChildren().remove(this.previousStickmanFrame);
-        this.previousStickmanFrame = stickman.updateFrame();
+        this.previousStickmanFrame = stickman.updateFrame(xViewportOffset);
         this.pane.getChildren().add(this.previousStickmanFrame);
     }
 
-    private void addStationaryEntities(GameEngine model, Pane pane) {
-        List<Platform> platformList = model.getCurrentLevel().getPlatforms();
-
-        for (Platform platform: platformList) {
-            pane.getChildren().add(platform.getHBox());
-        }
-    }
+//    private void addStationaryEntities(GameEngine model, Pane pane) {
+//        List<Platform> platformList = model.getCurrentLevel().getPlatforms();
+//
+//        for (Platform platform: platformList) {
+//            pane.getChildren().add(platform.getHBox());
+//        }
+//    }
 }

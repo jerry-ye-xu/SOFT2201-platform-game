@@ -1,16 +1,16 @@
 package stickman.model;
 
 import javafx.scene.image.ImageView;
-import stickman.view.Platform;
+import stickman.view.EntityViewImplMoving;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stickman {
-    protected static final double DEFAULT_SPEED = 1;
+public class Stickman extends EntityViewImplMoving {
+    protected static final double DEFAULT_SPEED = 1.5;
     protected static final double DEFAULT_JUMP = 12;
-    protected static final double DROP_ACCEL = 0.60;
+    protected static final double DROP_ACCEL = 0.40;
 
     protected final String size;
     protected final Layer layer;
@@ -58,11 +58,11 @@ public class Stickman {
         double startingYPos,
         Layer layer
     ) {
-        this.size = size;
-        this.layer = layer;
-
+        super(startingXPos, startingYPos, layer);
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;
+
+        this.size = size;
 
         this.setCharacterSize(size);
         this.xPosition = startingXPos;
@@ -121,18 +121,18 @@ public class Stickman {
             this.facingR = false;
         }
 
-        for (Platform platform: level.getPlatforms()) {
-            if (
-                this.xPosition < platform.getStartWidth() &&
-                this.xPosition > platform.getEndWidth() &&
-                this.yPosition == (platform.getHeight() + platform.getHBox().getHeight()) &&
-                this.onPlatform == true
-            ) {
-                // If you walk off a platform then fall down.
-                this.onPlatform = false;
-                this.updateYPos(level);
-            }
-        }
+//        for (Platform platform: level.getPlatforms()) {
+//            if (
+//                this.xPosition < platform.getStartWidth() &&
+//                this.xPosition > platform.getEndWidth() &&
+//                this.yPosition == (platform.getHeight() + platform.getHBox().getHeight()) &&
+//                this.onPlatform == true
+//            ) {
+//                // If you walk off a platform then fall down.
+//                this.onPlatform = false;
+//                this.updateYPos(level);
+//            }
+//        }
 
         // Cannot go past the boundaries of the stage.
         if (this.xPosition > level.getWidth()) {
@@ -145,29 +145,35 @@ public class Stickman {
     public void updateYPos(Level level) {
         this.ySpeed += DROP_ACCEL;
         this.yPosition += this.ySpeed;
+//        System.out.println("DECREASE: this.yPosition: " + this.yPosition);
 
+        boolean canLandOnPlatform = false;
 
-
-//        boolean canLandOnPlatform = false;
-//
 //        for (Platform platform: level.getPlatforms()) {
-//            double platformHeight = platform.getHeight() + platform.getHBox().getHeight();
+//            double platformHeight = platform.getHeight() - platform.getHBox().getHeight();
+//            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("platform.getStartWidth(): " + platform.getStartWidth());
+//            System.out.println("platform.getEndWidth(): " + platform.getEndWidth());
+//            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("this.yPosition: " + this.yPosition);
+//            System.out.println("this.onPlatform: " + this.onPlatform);
+//            System.out.println("platformHeight: " + platformHeight);
 //            if (
 //                this.xPosition >= platform.getStartWidth() &&
 //                this.xPosition <= platform.getEndWidth() &&
-//                this.yPosition >= platformHeight &&
+//                this.yPosition < platformHeight &&
 //                this.onPlatform == false
 //            ) {
 //                // If you jump higher than the platform, then you can land on it.
 //                canLandOnPlatform = true;
 //            }
 //
-//            if (canLandOnPlatform && this.yPosition == platformHeight) {
-//                this.yPosition = platform.getHeight() + platform.getHBox().getHeight();
+//            if (canLandOnPlatform && this.yPosition <= platformHeight) {
+//                this.yPosition = platform.getHeight() - platform.getHBox().getHeight();
 //                this.onPlatform = true;
 //                this.canJump = true;
+//                this.ySpeed = 0;
 //            }
-//        }
 
         // Cannot fall lower than floorHeight.
         if (this.yPosition > level.getFloorHeight() - this.height) {
@@ -177,14 +183,22 @@ public class Stickman {
         }
     }
 
-    public ImageView updateFrame() {
-        // If jumping, then reset frameIdx;
-        System.out.println("this.frameCount: " + frameCount);
-//        if (!this.canJump) {
-//            this.frameIdx = 0;
-//            String imagePath = walkLeftFrames.get(this.frameIdx);
-//            return buildStickmanImage(imagePath);
-//        }
+    @Override
+    public ImageView update(double xViewportOffset) {
+        String imagePath = this.chooseFrame();
+        URL imageURL = this.getClass().getResource(imagePath);
+        ImageView stickmanImage = new ImageView(imageURL.toExternalForm());
+        stickmanImage.setX(this.xPosition - xViewportOffset);
+        stickmanImage.setY(this.yPosition);
+        stickmanImage.setFitWidth(this.width);
+        stickmanImage.setFitHeight(this.height);
+        stickmanImage.setPreserveRatio(true);
+
+        return stickmanImage;
+    }
+
+    @Override
+    private String chooseFrame() {
         String imagePath;
         if (this.movingRight) {
             if (doUpdateFrame()) {
@@ -215,15 +229,16 @@ public class Stickman {
 
             }
         }
-        return buildStickmanImage(imagePath);
+        return imagePath;
     }
 
     private ImageView buildStickmanImage(
-        String imagePath
+        String imagePath,
+        double xViewportOffset
     ) {
         URL imageURL = this.getClass().getResource(imagePath);
         ImageView stickmanImage = new ImageView(imageURL.toExternalForm());
-        stickmanImage.setX(this.xPosition);
+        stickmanImage.setX(this.xPosition - xViewportOffset);
         stickmanImage.setY(this.yPosition);
         stickmanImage.setFitWidth(this.width);
         stickmanImage.setFitHeight(this.height);
@@ -231,9 +246,6 @@ public class Stickman {
 
         return stickmanImage;
     }
-
-    public double getXPosition() { return this.xPosition; }
-    public double getYPosition() { return this.yPosition; }
 
     public int getLives() { return this.numLives; }
 
@@ -265,30 +277,4 @@ public class Stickman {
         }
     }
 
-    public Layer getLayer() {
-        return this.layer;
-    }
-
-    private List<String> loadFrames(String pathStart, String pathEnd, int startInt, int numFrames) {
-        List<String> imageFrames = new ArrayList<>();
-        for (int i = startInt; i < startInt + numFrames; i++) {
-            imageFrames.add(pathStart + i + pathEnd);
-        }
-
-        return imageFrames;
-    }
-
-    public boolean doUpdateFrame() {
-        if (frameCount == frameCountRate) {
-            System.out.println("frameCount == frameCountRate");
-            frameCount = 0;
-            return true;
-        } else {
-            System.out.println("else");
-            frameCount += 1;
-            return false;
-        }
-    }
-    public int getFrameCount() { return this.frameCount; }
-    public void setFrameCount(int frameCount) { this.frameCount = frameCount; }
 }

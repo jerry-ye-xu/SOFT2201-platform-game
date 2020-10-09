@@ -7,5 +7,4 @@ public interface Entity {
     double getHeight();
     double getWidth();
     Layer getLayer();
-
 }

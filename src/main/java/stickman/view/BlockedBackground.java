@@ -16,8 +16,8 @@ public class BlockedBackground implements BackgroundDrawer {
         this.model = model;
         this.pane = pane;
 
-        double width = pane.getWidth();
-        double height = pane.getHeight();
+        double width = this.model.getCurrentLevel().getWidth();
+        double height = this.model.getCurrentLevel().getHeight();
         double floorHeight = model.getCurrentLevel().getFloorHeight();
 
         this.sky = new Rectangle(0, 0, width, floorHeight);

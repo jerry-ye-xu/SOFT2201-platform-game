@@ -1,12 +1,9 @@
 package stickman.model;
 
-import stickman.view.Platform;
-
 import java.util.List;
 
 public class LevelImpl implements Level{
     protected List<Entity> arrayEntities;
-    protected List<Platform> arrayPlatforms;
 
     protected double height;
     protected double width;
@@ -14,14 +11,12 @@ public class LevelImpl implements Level{
     protected double heroXPosition;
 
     public LevelImpl(
-        List<Platform> arrayPlatforms,
         List<Entity> arrayEntities,
         double height,
         double width,
         double floorHeight,
         double heroXPosition
     ) {
-        this.arrayPlatforms = arrayPlatforms;
         this.arrayEntities = arrayEntities;
         this.height = height;
         this.width = width;
@@ -32,11 +27,6 @@ public class LevelImpl implements Level{
     @Override
     public List<Entity> getEntities() {
         return this.arrayEntities;
-    }
-
-    @Override
-    public List<Platform> getPlatforms() {
-        return this.arrayPlatforms;
     }
 
     @Override

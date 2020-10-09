@@ -4,7 +4,7 @@
   "cloudVelocity": 3.2,
   "levelOne": {
     "height": 400,
-    "width": 2560,
+    "width": 1280,
     "floorHeight": 350,
     "flagPosition": {
       "height": 40,
@@ -24,14 +24,14 @@
       {
         "type": "stationary",
         "startWidth": 850,
-        "endWidth": 1200,
-        "height": 200,
+        "endWidth": 1000,
+        "height": 175,
         "imageName": "/foot_tile.png"
       },
       {
         "type": "stationary",
-        "startWidth": 1550,
-        "endWidth": 1700,
+        "startWidth": 1050,
+        "endWidth": 1200,
         "height": 250,
         "imageName": "/foot_tile.png"
       }
@@ -49,8 +49,8 @@
         "type": "mushroom",
         "width": 30,
         "height": 30,
-        "XPos": 295,
-        "YPos": 1600,
+        "XPos": 1100,
+        "YPos": 225,
         "imageName": "/mushroom.png"
       }
     ],
@@ -58,36 +58,32 @@
       {
         "type": "blob",
         "colour": "green",
-        "direction": "left-to-right",
-        "jump": 0,
+        "startDirection": "left",
+        "jumpHeight": 0,
         "attack": "none",
-        "startPlatform": "p1",
+        "XPos": 575,
+        "YPos": 250,
+        "movement": 20
       },
       {
         "type": "blob",
         "colour": "yellow",
-        "direction": "right-to-left",
-        "jump": 0,
+        "startDirection": "right",
+        "jumpHeight": 0,
         "attack": "none",
-        "startPlatform": "p2"
+        "XPos": 950,
+        "YPos": 150,
+        "movement": 30
       },
       {
         "name": "blob",
         "colour": "purple",
-        "direction": "right-to-left",
+        "startDirection": "right",
         "jump": 0,
         "attack": "none",
-        "startPlatform": "p2"
-      },
-      {
-        "name": "yoshi",
-        "direction": "right-to-left",
-        "jump": 10,
-        "attack": "bullet",
-        "startPlatform": "ground",
-        "startWidth": 1280,
-        "moveBoundaryLeft": 1080,
-        "moveBoundaryRight": 1480
+        "XPos": 1125,
+        "YPos": 225,
+        "movement": 50
       }
     ]
   }

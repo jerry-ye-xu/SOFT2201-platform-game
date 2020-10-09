@@ -2,6 +2,7 @@ package stickman.view;
 
 import stickman.model.Layer;
 import javafx.scene.layout.HBox;
+import stickman.model.Platform;
 
 public class PlatformStationary implements Platform {
 

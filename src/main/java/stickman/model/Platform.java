@@ -1,4 +1,4 @@
-package stickman.view;
+package stickman.model;
 
 import stickman.model.Layer;
 

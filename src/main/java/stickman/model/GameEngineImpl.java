@@ -12,10 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import stickman.view.Platform;
-import stickman.view.PlatformFactory;
-import stickman.view.PlatformFactoryImpl;
-
 public class GameEngineImpl implements GameEngine {
     private JSONObject jsonDict;
     private String levelName;
@@ -102,13 +98,14 @@ public class GameEngineImpl implements GameEngine {
         JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
         JSONArray enemyArrayJSON = parseJsonArray(levelDict, "enemyList");
 
-        List<Platform> platformList = this.buildPlatforms(platformArrayJSON);
+        List<Entity> platformList = this.buildPlatforms(platformArrayJSON);
         List<Entity> powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
 //        List<Entity> enemyList = this.buildEnemyEntities(enemyArrayJSON);
 
         Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
 
         List<Entity> entityList = new ArrayList<>();
+        entityList.addAll(platformList);
         entityList.addAll(powerUpList);
         entityList.add(flag);
 
@@ -120,7 +117,6 @@ public class GameEngineImpl implements GameEngine {
         double floorHeight = ((Long) levelDict.get("floorHeight")).doubleValue();
 
         Level gameLevel = new LevelImpl(
-            platformList,
             entityList,
             height,
             width,
@@ -131,14 +127,16 @@ public class GameEngineImpl implements GameEngine {
         return gameLevel;
     }
 
-    private List<Platform> buildPlatforms(JSONArray arrayJSON) {
-        List<Platform> objList = new ArrayList<>();
+    private List<Entity> buildPlatforms(JSONArray arrayJSON) {
+        List<Entity> objList = new ArrayList<>();
         PlatformFactory platformFactory = new PlatformFactoryImpl();
+        List<Entity> tmpList;
 
         for (Object obj: arrayJSON) {
             JSONObject objJSON = (JSONObject) obj;
             String objType = (String) objJSON.get("type");
-            objList.add(platformFactory.createPlatform(objType, objJSON));
+            tmpList = platformFactory.createPlatform(objType, objJSON);
+            objList.addAll(tmpList);
         }
 
         return objList;
