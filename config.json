@@ -76,7 +76,7 @@
         "movement": 15
       },
       {
-        "name": "blob",
+        "type": "blob",
         "colour": "purple",
         "startDirection": "right",
         "jump": 0,
