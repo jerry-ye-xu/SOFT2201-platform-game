@@ -1,16 +1,12 @@
 package stickman.model;
 
 import org.json.simple.JSONObject;
-import stickman.model.Entity;
-import stickman.model.EntityTileImpl;
-import stickman.model.Layer;
-import stickman.model.PlatformFactory;
 
 import java.lang.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlatformFactoryImpl implements PlatformFactory {
+public class EntityFactoryPlatformImpl implements EntityFactoryPlatform {
 
     @Override
     public List<Entity> createPlatform(String platformType, JSONObject platformProperties) {
@@ -26,7 +22,7 @@ public class PlatformFactoryImpl implements PlatformFactory {
         final double endWidth = ((Long) entityProperties.get("endWidth")).doubleValue();
         final double height = ((Long) entityProperties.get("height")).doubleValue();
         final String imagePath = (String) entityProperties.get("imageName");
-        final Layer layer = Layer.BACKGROUND;
+        final Layer layer = Layer.ENTITY_LAYER;
 
         // Tiles should ideally be squares.
         int singleTileWidth = 12;
@@ -35,7 +31,7 @@ public class PlatformFactoryImpl implements PlatformFactory {
         List<Entity> tiles = new ArrayList<>();
 
         for (int i=0; i<(endWidth-startWidth); i=i+singleTileWidth) {
-            Entity tileInstance = new EntityTileImpl(
+            Entity tileInstance = new EntityImplTile(
                 singleTileWidth,
                 singleTileHeight,
                 startWidth + i,

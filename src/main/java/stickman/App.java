@@ -42,7 +42,7 @@ public class App extends Application {
         window.run();
 //        System.out.println("bob");
 
-        primaryStage.setTitle("Stickman");
+        primaryStage.setTitle("EntityViewStickman");
 //        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(window.getScene());
         primaryStage.show();

@@ -10,23 +10,25 @@ import javafx.scene.image.ImageView;
 import java.net.URL;
 
 public class EntityViewImpl implements EntityView {
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
+    protected Entity entity;
+    protected boolean delete = false;
+    protected ImageView node;
+    protected String imagePath;
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
+        System.out.println("Inside EntityViewImpl");
+        System.out.println("this.entity: " + this.entity);
         this.imagePath = this.entity.getImagePath();
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
-        this.node.setViewOrder(getViewOrder(entity.getLayer()));
-        this.update(0);
+        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
     }
 
     private double getViewOrder(Layer layer) {
         switch (layer) {
             case BACKGROUND: return 100.0;
+            case ENTITY_LAYER: return 75.0;
             case FOREGROUND: return 50.0;
             case EFFECT: return 25.0;
             default: throw new IllegalStateException("Javac doesn't understand how enums work so now I have to exist");

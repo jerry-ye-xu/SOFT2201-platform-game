@@ -1,11 +1,13 @@
 package stickman.model;
 
+import stickman.view.EntityViewStickman;
+
 public interface GameEngine {
     Level getCurrentLevel();
 
     void startLevel();
 
-    Stickman getStickman();
+    EntityViewStickman getEntityViewStickman();
 
     // Hero inputs - boolean for success (possibly for sound feedback)
     boolean jump();

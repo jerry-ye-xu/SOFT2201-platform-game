@@ -2,6 +2,7 @@ package stickman.view;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import stickman.model.Entity;
 import stickman.model.Layer;
 
 import java.util.ArrayList;
@@ -11,52 +12,45 @@ public class EntityViewImplMoving extends EntityViewImpl {
     protected static final double DEFAULT_SPEED = 1;
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
+    protected final int frameCountRate = 45;
 
-    protected final Layer layer;
-    protected double width;
-    protected double height;
-    protected final double xSpeed;
-    protected double ySpeed;
-    protected double xPosition;
-    protected double yPosition;
-    protected boolean movingLeft;
-    protected boolean movingRight;
-    protected boolean facingL;
-    protected boolean facingR;
-    protected boolean canJump = true;
+    private final Layer layer;
+    private double width;
+    private double height;
+    private final double xSpeed;
+    private double ySpeed;
+    private double xPosition;
+    private double yPosition;
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
+    private boolean canJump;
 
-    protected final int frameCountRate = 60;
-    protected int frameCount = 0;
-    protected int frameIdx = 0;
-    protected ImageView currentFrame;
+    private int frameCount = 0;
+    private int frameIdx = 0;
 
-    List<String> standingLeftFrames;
-    List<String> standingRightFrames;
-    List<String> walkRightFrames;
-    List<String> walkLeftFrames;
+    public EntityViewImplMoving(Entity entity) {
+        super(entity);
+        System.out.println("Inside EntityViewImplMoving");
+        System.out.println("this.entity: " + this.entity);
+        this.layer = this.entity.getLayer();
 
-    protected final int idxStartFramesMoveRight;
-    protected final int numFramesMoveRight;
-    protected final int idxStartFramesMoveLeft;
-    protected final int numFramesMoveLeft;
-    protected final int idxStartFramesStillRight;
-    protected final int numFramesStillRight;
-    protected final int idxStartFramesStillLeft;
-    protected final int numFramesStillLeft;
+        this.width = this.entity.getWidth();
+        this.height = this.entity.getHeight();
 
-    public EntityViewImplMoving(
-        double startingXPos,
-        double startingYPos,
-        Layer layer
-    ) {
-        super();
-        this.layer = layer;
-
-        this.xPosition = startingXPos;
-        this.yPosition = startingYPos - this.height;
+        this.xPosition = this.entity.getXPos();
+        this.yPosition = this.entity.getYPos() - this.entity.getHeight();
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;
+    }
+
+    /*
+        Movement
+     */
+
+    protected void setMovement(boolean movingLeft, boolean movingRight) {
+        this.movingLeft = movingLeft;
+        this.movingRight = movingRight;
     }
 
     public void jump() {
@@ -105,7 +99,7 @@ public class EntityViewImplMoving extends EntityViewImpl {
         Loading and updating frames
      */
 
-    private List<String> loadFrames(String pathStart, String pathEnd, int startInt, int numFrames) {
+    protected List<String> loadFramePaths(String pathStart, String pathEnd, int startInt, int numFrames) {
         List<String> imageFrames = new ArrayList<>();
         for (int i = startInt; i < startInt + numFrames; i++) {
             imageFrames.add(pathStart + i + pathEnd);
@@ -114,7 +108,11 @@ public class EntityViewImplMoving extends EntityViewImpl {
         return imageFrames;
     }
 
-    public boolean doUpdateFrame() {
+    private void loadEntityFrames() { }
+
+    private String chooseFrame() { return this.entity.getImagePath(); }
+
+    private boolean doUpdateFrame() {
         if (frameCount == frameCountRate) {
             frameCount = 0;
             return true;

@@ -4,6 +4,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import stickman.view.EntityView;
+import stickman.view.EntityViewStickman;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,13 +18,13 @@ public class GameEngineImpl implements GameEngine {
     private JSONObject jsonDict;
     private String levelName;
     private Level gameLevel;
-    private Stickman stickman;
+    private EntityViewStickman entityViewStickman;
 
     public GameEngineImpl(String jsonConfigPath, String levelName) {
         // @TODO: Read JSON config
         this.levelName = levelName;
         this.jsonDict = parseJsonConfig(jsonConfigPath);
-        this.stickman = this.buildStickman(levelName);
+        this.entityViewStickman = this.buildStickman(levelName);
         this.gameLevel = this.buildLevel(levelName);
     }
 
@@ -37,16 +39,16 @@ public class GameEngineImpl implements GameEngine {
     }
 
     @Override
-    public Stickman getStickman() {
-        return this.stickman;
+    public EntityViewStickman getEntityViewStickman() {
+        return this.entityViewStickman;
     }
 
     @Override
     public boolean jump() {
-        if (this.stickman.canJump) {
-            System.out.println("this.stickman.jump()");
-            this.stickman.jump();
-            System.out.println(this.stickman.getYPosition());
+        if (this.entityViewStickman.getCanJump()) {
+            System.out.println("this.entityViewStickman.jump()");
+            this.entityViewStickman.jump();
+            System.out.println(this.entityViewStickman.getYPosition());
             return true;
         } else {
             return false;
@@ -55,29 +57,29 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public boolean moveLeft() {
-        this.stickman.setMovement(true, false);
+        this.entityViewStickman.setMovement(true, false);
         return true;
     }
 
     @Override
     public boolean moveRight() {
-        this.stickman.setMovement(false, true);
+        this.entityViewStickman.setMovement(false, true);
         return true;
     }
 
     @Override
     public boolean stopMoving() {
-        this.stickman.setMovement(false, false);
+        this.entityViewStickman.setMovement(false, false);
         return true;
     }
 
     @Override
     public void tick() {
-//        System.out.println("this.stickman");
-        this.stickman.updateXPos(this.gameLevel);
-        this.stickman.updateYPos(this.gameLevel);
-//        System.out.println(this.stickman.getXPosition());
-//        System.out.println(this.stickman.getYPosition());
+//        System.out.println("this.entityViewStickman");
+        this.entityViewStickman.updateXPos(this.gameLevel);
+        this.entityViewStickman.updateYPos(this.gameLevel);
+//        System.out.println(this.entityViewStickman.getXPosition());
+//        System.out.println(this.entityViewStickman.getYPosition());
 //        System.out.println("this.updateXPos(this.gameLevel)");
 //        System.out.println("this.updateYPos(this.gameLevel)");
 
@@ -129,7 +131,7 @@ public class GameEngineImpl implements GameEngine {
 
     private List<Entity> buildPlatforms(JSONArray arrayJSON) {
         List<Entity> objList = new ArrayList<>();
-        PlatformFactory platformFactory = new PlatformFactoryImpl();
+        EntityFactoryPlatform platformFactory = new EntityFactoryPlatformImpl();
         List<Entity> tmpList;
 
         for (Object obj: arrayJSON) {
@@ -144,7 +146,7 @@ public class GameEngineImpl implements GameEngine {
 
     private List<Entity> buildPowerUpEntities(JSONArray arrayJSON) {
         List<Entity> objList = new ArrayList<>();
-        EntityFactory entityFactory = new EntityPowerUpFactory();
+        EntityFactory entityFactory = new EntityFactoryPowerUp();
 
         for (Object obj: arrayJSON) {
             JSONObject objJSON = (JSONObject) obj;
@@ -162,9 +164,9 @@ public class GameEngineImpl implements GameEngine {
         final double XPos = ((Long) objJSON.get("XPos")).doubleValue();
         final double YPos = ((Long) objJSON.get("YPos")).doubleValue();
         final String imagePath = (String) objJSON.get("imageName");
-        final Layer layer = Layer.FOREGROUND;
+        final Layer layer = Layer.ENTITY_LAYER;
 
-        Entity flag = new EntityFlagImpl(
+        Entity flag = new EntityImplFlag(
             width,
             height,
             XPos,
@@ -178,7 +180,7 @@ public class GameEngineImpl implements GameEngine {
 
 //    private List<Entity> buildEnemyEntities(JSONArray arrayJSON) {
 //        List<Entity> objList = new ArrayList<>();
-//        EntityFactory entityFactory = new EnemyEntityFactory();
+//        EntityFactory entityFactory = new EntityFactoryEnemy();
 //
 //        for (Object obj: arrayJSON) {
 //            JSONObject objJSON = (JSONObject) obj;
@@ -189,21 +191,41 @@ public class GameEngineImpl implements GameEngine {
 //        return objList;
 //    }
 
-    private Stickman buildStickman(String levelName) {
+    private EntityViewStickman buildStickman(String levelName) {
         JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
 
         String size = (String) this.jsonDict.get("stickmanSize");
+        int width;
+        int height;
+        if (size.equals("normal")) {
+            width = 30;
+            height = 45;
+        } else if (size.equals("large")) {
+            width = 45;
+            height = 60;
+        } else {
+            throw new UnsupportedOperationException("Only enemy entity of type 'blob' is supported right now.");
+        }
+
         double startingXPos = (Double) this.jsonDict.get("stickmanStartingPos");
         double startingYPos = ((Long) levelDict.get("floorHeight")).doubleValue();
 
+        String imagePath = "/ch_stand1.png";
         final Layer layer = Layer.FOREGROUND;
 
-        Stickman stickman = new Stickman(
-            size,
+        System.out.println("startingYPos: " + startingYPos);
+        System.out.println("height: " + height);
+
+        Entity stickmanEntity = new EntityImplStickman(
+            width,
+            height,
             startingXPos,
-            startingYPos,
+            startingYPos - height,
+            imagePath,
             layer
         );
+
+        EntityViewStickman stickman = new EntityViewStickman(stickmanEntity);
 
         return stickman;
     }

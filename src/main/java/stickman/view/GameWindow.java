@@ -9,10 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
-import stickman.model.Platform;
-import stickman.model.Stickman;
 
-import javax.swing.text.AsyncBoxView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +30,9 @@ public class GameWindow {
         this.pane = new Pane();
         this.width = width;
         this.scene = new Scene(
-                this.pane,
-                width,
-                height
+            this.pane,
+            width,
+            height
         );
 
         this.entityViews = new ArrayList<>();
@@ -47,8 +44,8 @@ public class GameWindow {
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
         this.backgroundDrawer = new BlockedBackground();
-
         this.backgroundDrawer.draw(model, this.pane);
+        this.pane.getChildren().add(this.model.getEntityViewStickman().getNode());
     }
 
     public Scene getScene() {
@@ -72,30 +69,12 @@ public class GameWindow {
             entityView.markForDelete();
         }
 
-        double heroXPos = model.getStickman().getXPosition();
-        heroXPos -= xViewportOffset;
         this.refreshStickmanFrame(this.model, xViewportOffset);
-
-//        if (heroXPos < VIEWPORT_MARGIN) {
-//            if (xViewportOffset >= 0) { // Don't go further left than the start of the level
-//                xViewportOffset += heroXPos - VIEWPORT_MARGIN;
-//                if (xViewportOffset < 0) {
-//                    xViewportOffset = 0;
-//                }
-//            }
-//        } else if (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)) {
-//            System.out.println("AT THE END OF THE LEVEL");
-//            System.out.println("this.model.getCurrentLevel().getWidth(): " + this.model.getCurrentLevel().getWidth());
-//            xViewportOffset += heroXPos - VIEWPORT_MARGIN;
-//            if (xViewportOffset > this.model.getCurrentLevel().getWidth() - width) {
-//                xViewportOffset = this.model.getCurrentLevel().getWidth() - width;
-//            }
-//        } else if (heroXPos > (width - VIEWPORT_MARGIN)) {
-//            System.out.println("heroXPos > width - VIEWPORT_MARGIN: " + (heroXPos > width - VIEWPORT_MARGIN));
-//            System.out.println("heroXPos: " + heroXPos);
-//            System.out.println("xViewportOffset: " + xViewportOffset);
-//            xViewportOffset = heroXPos - VIEWPORT_MARGIN;
-//        }
+        double heroXPos = model.getEntityViewStickman().getXPosition();
+        System.out.println("BEFORE -= xViewportOffset");
+        System.out.println("xViewportOffset: " + xViewportOffset);
+        System.out.println("heroXPos: " + heroXPos);
+        heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
             if (xViewportOffset >= 0) { // Don't go further left than the start of the level
@@ -105,22 +84,20 @@ public class GameWindow {
                 }
             }
         } else if (heroXPos > width - VIEWPORT_MARGIN) {
+            System.out.println("MOVING THE FRAME...");
+            System.out.println("heroXPos: " + heroXPos);
+            System.out.println("xViewportOffset: " + xViewportOffset);
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
+            System.out.println("xViewportOffset: " + xViewportOffset);
+
+            double stickmanWidth = this.model.getEntityViewStickman().getWidth();
+
+            if (xViewportOffset >= this.model.getCurrentLevel().getWidth() - width + stickmanWidth) {
+                xViewportOffset = this.model.getCurrentLevel().getWidth() - width + stickmanWidth;
+            }
         }
 
-//        else if (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)) {
-//            System.out.println("heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN): " + (heroXPos > (this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN)));
-//            if (xViewportOffset <= this.model.getCurrentLevel().getWidth()) {
-//                System.out.println("xViewportOffset: " + xViewportOffset);
-//                xViewportOffset += heroXPos + VIEWPORT_MARGIN;
-//                if (xViewportOffset > this.model.getCurrentLevel().getWidth()) {
-//                    System.out.println("xViewportOffset: " + xViewportOffset);
-//                    xViewportOffset += this.model.getCurrentLevel().getWidth() - VIEWPORT_MARGIN;
-//                }
-//            }
-//        }
-
-
+        System.out.println("AFTER updating xViewportOffset");
         System.out.println("heroXPos: " + heroXPos);
         System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
         System.out.println("width: " + width);
@@ -153,10 +130,12 @@ public class GameWindow {
     }
 
     private void refreshStickmanFrame(GameEngine model, double xViewportOffset) {
-        Stickman stickman = model.getStickman();
-        this.pane.getChildren().remove(this.previousStickmanFrame);
-        this.previousStickmanFrame = stickman.updateFrame(xViewportOffset);
-        this.pane.getChildren().add(this.previousStickmanFrame);
+        EntityViewStickman stickman = model.getEntityViewStickman();
+        stickman.update(xViewportOffset);
+//        EntityViewStickman stickman = model.getEntityViewStickman();
+//        this.pane.getChildren().remove(this.previousStickmanFrame);
+//        this.previousStickmanFrame = stickman.update(xViewportOffset);
+//        this.pane.getChildren().add(this.previousStickmanFrame);
     }
 
 //    private void addStationaryEntities(GameEngine model, Pane pane) {

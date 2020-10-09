@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import stickman.model.Entity;
 
 public interface EntityView {
+
     void update(double xViewportOffset);
 
     boolean matchesEntity(Entity entity);

@@ -1,8 +1,8 @@
 package stickman.model;
 
-public class EntityTileImpl extends EntityImpl {
+public class EntityImplTile extends EntityImpl {
 
-    public EntityTileImpl(
+    public EntityImplTile(
         double width,
         double height,
         double XPos,
