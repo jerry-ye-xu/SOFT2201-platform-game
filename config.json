@@ -9,8 +9,8 @@
     "flagPosition": {
       "height": 40,
       "width": 40,
-      "XPos": 375,
-      "YPos": 1230,
+      "XPos": 1180,
+      "YPos": 350,
       "imageName": "/flag.png"
     },
     "platformList": [
@@ -42,7 +42,7 @@
         "width": 30,
         "height": 30,
         "XPos": 375,
-        "YPos": 220,
+        "YPos": 250,
         "imageName": "/mushroom.png"
       },
       {
@@ -50,7 +50,7 @@
         "width": 30,
         "height": 30,
         "XPos": 1100,
-        "YPos": 220,
+        "YPos": 250,
         "imageName": "/mushroom.png"
       }
     ],
@@ -62,8 +62,8 @@
         "jumpHeight": 0,
         "attack": "none",
         "XPos": 575,
-        "YPos": 225,
-        "movementRange": 10
+        "YPos": 260,
+        "movementRange": 40
       },
       {
         "type": "blob",
@@ -71,9 +71,9 @@
         "startDirection": "right",
         "jumpHeight": 0,
         "attack": "none",
-        "XPos": 950,
-        "YPos": 150,
-        "movementRange": 15
+        "XPos": 900,
+        "YPos": 185,
+        "movementRange": 45
       },
       {
         "type": "blob",
@@ -82,8 +82,8 @@
         "jumpHeight": 0,
         "attack": "none",
         "XPos": 1125,
-        "YPos": 225,
-        "movementRange": 25
+        "YPos": 260,
+        "movementRange": 50
       }
     ]
   }
