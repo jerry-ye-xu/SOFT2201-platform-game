@@ -25,6 +25,11 @@ public class EntityViewImplMoving extends EntityViewImpl {
     private boolean movingRight = false;
     private boolean canJump;
 
+    private Entity entity;
+    private boolean delete = false;
+    private ImageView node;
+    private String imagePath;
+
     private int frameCount = 0;
     private int frameIdx = 0;
 
@@ -38,7 +43,7 @@ public class EntityViewImplMoving extends EntityViewImpl {
         this.height = this.entity.getHeight();
 
         this.xPosition = this.entity.getXPos();
-        this.yPosition = this.entity.getYPos() - this.entity.getHeight();
+        this.yPosition = this.entity.getYPos();
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;

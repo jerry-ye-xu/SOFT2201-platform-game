@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
+import stickman.model.EntityImplBlob;
 import stickman.model.GameEngine;
 
 import java.util.ArrayList;
@@ -46,6 +47,12 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
         this.backgroundDrawer.draw(model, this.pane);
         this.pane.getChildren().add(this.model.getEntityViewStickman().getNode());
+
+        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
+            System.out.println("blob: " + blob);
+            this.pane.getChildren().add(blob.getNode());
+        }
+
     }
 
     public Scene getScene() {
@@ -70,6 +77,11 @@ public class GameWindow {
         }
 
         this.refreshStickmanFrame(this.model, xViewportOffset);
+
+        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
+            blob.update(xViewportOffset);
+        }
+
         double heroXPos = model.getEntityViewStickman().getXPosition();
 //        System.out.println("BEFORE -= xViewportOffset");
 //        System.out.println("xViewportOffset: " + xViewportOffset);
@@ -121,6 +133,7 @@ public class GameWindow {
                 } else {
                     entityView = new EntityViewImpl(entity);
                 }
+//                entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
                 pane.getChildren().add(entityView.getNode());
             }

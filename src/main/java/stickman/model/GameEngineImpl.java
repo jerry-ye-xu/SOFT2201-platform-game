@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import stickman.view.EntityView;
+import stickman.view.EntityViewBlob;
 import stickman.view.EntityViewStickman;
 
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ public class GameEngineImpl implements GameEngine {
     private String levelName;
     private Level gameLevel;
     private EntityViewStickman entityViewStickman;
+    private List<EntityViewBlob> entityViewBlobList;
 
     private List<Entity> platformList;
     private List<Entity> powerUpList;
@@ -30,6 +32,11 @@ public class GameEngineImpl implements GameEngine {
         this.jsonDict = parseJsonConfig(jsonConfigPath);
         this.entityViewStickman = this.buildStickman(levelName);
         this.gameLevel = this.buildLevel(levelName);
+
+        entityViewBlobList = new ArrayList<>();
+        for (Entity enemy: enemyList) {
+            entityViewBlobList.add(new EntityViewBlob(enemy));
+        }
     }
 
     @Override
@@ -38,9 +45,7 @@ public class GameEngineImpl implements GameEngine {
     }
 
     @Override
-    public void startLevel() {
-
-    }
+    public void startLevel() { }
 
     @Override
     public EntityViewStickman getEntityViewStickman() {
@@ -82,6 +87,12 @@ public class GameEngineImpl implements GameEngine {
 //        System.out.println("this.entityViewStickman");
         this.entityViewStickman.updateXPos(this.gameLevel);
         this.entityViewStickman.updateYPos(this.gameLevel);
+
+        for (EntityViewBlob blob: entityViewBlobList) {
+            blob.updateXPos();
+            blob.updateYPos();
+        }
+
 //        System.out.println(this.entityViewStickman.getXPosition());
 //        System.out.println(this.entityViewStickman.getYPosition());
 //        System.out.println("this.updateXPos(this.gameLevel)");
@@ -115,7 +126,7 @@ public class GameEngineImpl implements GameEngine {
         List<Entity> entityList = new ArrayList<>();
         entityList.addAll(platformList);
         entityList.addAll(powerUpList);
-        entityList.addAll(enemyList);
+//        entityList.addAll(enemyList);
         entityList.add(flag);
 
         System.out.println("entityList.size()");
@@ -178,7 +189,7 @@ public class GameEngineImpl implements GameEngine {
             width,
             height,
             XPos,
-            YPos,
+            YPos - height,
             imagePath,
             layer
         );
@@ -265,4 +276,10 @@ public class GameEngineImpl implements GameEngine {
 
         return jsonDict;
     }
+
+    /*
+        Getters and setters
+     */
+
+    public List<EntityViewBlob> getEntityViewBlobList() { return this.entityViewBlobList; }
 }

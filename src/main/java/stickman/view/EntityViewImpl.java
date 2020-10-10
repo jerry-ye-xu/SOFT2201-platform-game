@@ -10,10 +10,10 @@ import javafx.scene.image.ImageView;
 import java.net.URL;
 
 public class EntityViewImpl implements EntityView {
-    protected Entity entity;
-    protected boolean delete = false;
-    protected ImageView node;
-    protected String imagePath;
+    private Entity entity;
+    private boolean delete = false;
+    private ImageView node;
+    private String imagePath;
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
@@ -38,6 +38,8 @@ public class EntityViewImpl implements EntityView {
     @Override
     public void update(double xViewportOffset) {
         String newPath = entity.getImagePath();
+//        System.out.println("Inside EntityViewImpl");
+//        System.out.println("this.entity: " + this.entity);
         if (!imagePath.equals(newPath)) {
             imagePath = newPath;
             node.setImage(new Image(imagePath));

@@ -40,7 +40,7 @@ public class EntityFactoryEnemy implements EntityFactory {
             width,
             height,
             XPos,
-            YPos,
+            YPos - height,
             imagePath,
             layer,
             jumpHeight,

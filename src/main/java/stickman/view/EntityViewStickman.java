@@ -1,5 +1,6 @@
 package stickman.view;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import stickman.model.Entity;
@@ -11,10 +12,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewStickman extends EntityViewImplMoving {
+public class EntityViewStickman implements EntityView {
     protected static final double DEFAULT_SPEED = 2;
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
+
+    private Entity entity;
+    private boolean delete = false;
+    private ImageView node;
+    private String imagePath;
 
     private final Layer layer;
     private double width;
@@ -50,11 +56,11 @@ public class EntityViewStickman extends EntityViewImplMoving {
     private final int idxStartFramesStillLeft = 4;
     private final int numFramesStillLeft = 3;
 
+    private final int frameCountRate = 90;
     private int frameCount = 0;
     private int frameIdx = 0;
 
     public EntityViewStickman(Entity entity) {
-        super(entity);
         this.entity = entity;
         this.layer = this.entity.getLayer();
 
@@ -68,6 +74,11 @@ public class EntityViewStickman extends EntityViewImplMoving {
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;
+
+        this.imagePath = this.entity.getImagePath();
+        URL imageURL = this.getClass().getResource(this.imagePath);
+        this.node = new ImageView(imageURL.toExternalForm());
+        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
 
         this.loadEntityFrames();
     }
@@ -90,21 +101,21 @@ public class EntityViewStickman extends EntityViewImplMoving {
 
     public void updateXPos(Level level) {
         if (this.movingRight) {
-            System.out.println("Update movingRight");
-            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
-            System.out.println("this.xSpeed: " + this.xSpeed);
-            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("Update movingRight");
+//            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
+//            System.out.println("this.xSpeed: " + this.xSpeed);
+//            System.out.println("this.xPosition: " + this.xPosition);
             this.xPosition += this.xSpeed * DEFAULT_SPEED;
-            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("this.xPosition: " + this.xPosition);
             this.facingL = false;
             this.facingR = true;
         } else if (this.movingLeft) {
-            System.out.println("Update movingLeft");
-            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
-            System.out.println("this.xSpeed: " + this.xSpeed);
-            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("Update movingLeft");
+//            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
+//            System.out.println("this.xSpeed: " + this.xSpeed);
+//            System.out.println("this.xPosition: " + this.xPosition);
             this.xPosition -= this.xSpeed * DEFAULT_SPEED;
-            System.out.println("this.xPosition: " + this.xPosition);
+//            System.out.println("this.xPosition: " + this.xPosition);
             this.facingL = true;
             this.facingR = false;
         }
@@ -171,6 +182,16 @@ public class EntityViewStickman extends EntityViewImplMoving {
         }
     }
 
+    private double getViewOrder(Layer layer) {
+        switch (layer) {
+            case BACKGROUND: return 100.0;
+            case ENTITY_LAYER: return 75.0;
+            case FOREGROUND: return 50.0;
+            case EFFECT: return 25.0;
+            default: throw new IllegalStateException("Javac doesn't understand how enums work so now I have to exist");
+        }
+    }
+
     /*
         Loading and Updating Frames
      */
@@ -222,6 +243,26 @@ public class EntityViewStickman extends EntityViewImplMoving {
         this.node.setPreserveRatio(true);
     }
 
+    @Override
+    public boolean matchesEntity(Entity entity) {
+        return this.entity.equals(entity);
+    }
+
+    @Override
+    public void markForDelete() {
+        this.delete = true;
+    }
+
+    @Override
+    public Node getNode() {
+        return this.node;
+    }
+
+    @Override
+    public boolean isMarkedForDelete() {
+        return this.delete;
+    }
+
     private String chooseFrame() {
         String imagePath;
         if (this.movingRight) {
@@ -268,6 +309,15 @@ public class EntityViewStickman extends EntityViewImplMoving {
         }
     }
 
+    private List<String> loadFramePaths(String pathStart, String pathEnd, int startInt, int numFrames) {
+        List<String> imageFrames = new ArrayList<>();
+        for (int i = startInt; i < startInt + numFrames; i++) {
+            imageFrames.add(pathStart + i + pathEnd);
+        }
+
+        return imageFrames;
+    }
+
 //    private ImageView buildStickmanImage(
 //        String imagePath,
 //        double xViewportOffset
@@ -288,6 +338,16 @@ public class EntityViewStickman extends EntityViewImplMoving {
      */
 
     public double getXPosition() { return this.xPosition; }
+
+    public double getYPosition() { return this.yPosition; }
+
+    public Layer getLayer() {
+        return this.layer;
+    }
+
+    public int getFrameCount() { return this.frameCount; }
+
+    public void setFrameCount(int frameCount) { this.frameCount = frameCount; }
 
     public double getWidth() { return this.width; }
 

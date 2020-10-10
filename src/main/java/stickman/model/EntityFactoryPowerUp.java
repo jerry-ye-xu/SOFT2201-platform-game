@@ -26,7 +26,7 @@ public class EntityFactoryPowerUp implements EntityFactory {
             width,
             height,
             XPos,
-            YPos,
+            YPos - height,
             imagePath,
             layer
         );
