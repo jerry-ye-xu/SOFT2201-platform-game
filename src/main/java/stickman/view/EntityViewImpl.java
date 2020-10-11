@@ -23,6 +23,14 @@ public class EntityViewImpl implements EntityView {
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
         this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
+
+        this.node.setX(entity.getXPos());
+        this.node.setY(entity.getYPos());
+        this.node.setFitHeight(entity.getHeight());
+        this.node.setFitWidth(entity.getWidth());
+        this.node.setPreserveRatio(true);
+        this.delete = false;
+
     }
 
     private double getViewOrder(Layer layer) {
@@ -51,6 +59,9 @@ public class EntityViewImpl implements EntityView {
         node.setPreserveRatio(true);
         delete = false;
     }
+
+    @Override
+    public Entity getEntity() { return this.entity; }
 
     @Override
     public boolean matchesEntity(Entity entity) {

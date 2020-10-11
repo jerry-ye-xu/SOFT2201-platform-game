@@ -6,6 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import stickman.view.EntityView;
 import stickman.view.EntityViewBlob;
+import stickman.view.EntityViewFireball;
 import stickman.view.EntityViewStickman;
 
 import java.io.FileNotFoundException;
@@ -21,6 +22,7 @@ public class GameEngineImpl implements GameEngine {
     private Level gameLevel;
     private EntityViewStickman entityViewStickman;
     private List<EntityViewBlob> entityViewBlobList;
+    private List<EntityViewFireball> entityViewFireballList;
 
     private List<Entity> platformList;
     private List<Entity> powerUpList;
@@ -33,7 +35,7 @@ public class GameEngineImpl implements GameEngine {
         this.entityViewStickman = this.buildStickman(levelName);
         this.gameLevel = this.buildLevel(levelName);
 
-        entityViewBlobList = new ArrayList<>();
+        this.entityViewBlobList = new ArrayList<>();
         for (Entity enemy: enemyList) {
             entityViewBlobList.add(new EntityViewBlob(enemy));
         }
@@ -65,6 +67,12 @@ public class GameEngineImpl implements GameEngine {
     }
 
     @Override
+    public boolean fire() {
+        this.entityViewStickman.fire(this.getCurrentLevel());
+        return true;
+    }
+
+    @Override
     public boolean moveLeft() {
         this.entityViewStickman.setMovement(true, false);
         return true;
@@ -88,10 +96,10 @@ public class GameEngineImpl implements GameEngine {
         this.entityViewStickman.updateXPos(this.gameLevel);
         this.entityViewStickman.updateYPos(this.gameLevel);
 
-        for (EntityViewBlob blob: entityViewBlobList) {
-            blob.updateXPos();
-            blob.updateYPos();
-        }
+//        for (EntityViewBlob blob: entityViewBlobList) {
+//            blob.updateXPos();
+//            blob.updateYPos();
+//        }
 
 //        System.out.println(this.entityViewStickman.getXPosition());
 //        System.out.println(this.entityViewStickman.getYPosition());

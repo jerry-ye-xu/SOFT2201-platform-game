@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import stickman.model.Entity;
+import stickman.model.EntityImplFireball;
 import stickman.model.Layer;
 import stickman.model.Level;
 import stickman.view.EntityViewImplMoving;
@@ -35,8 +36,10 @@ public class EntityViewStickman implements EntityView {
     private boolean facingR = true;
     private boolean canJump = true;
     private boolean onPlatform = false;
+    private final double startingXPos;
+    private final double startingYPos;
 
-    private int numLives = 4;
+    private int numLives = 3;
     private int score = 0;
 
     private boolean mushroomPowerUp = false;
@@ -70,6 +73,8 @@ public class EntityViewStickman implements EntityView {
         System.out.println("yPosition: " + yPosition);
         this.xPosition = this.entity.getXPos();
         this.yPosition = this.entity.getYPos() - this.entity.getHeight();
+        this.startingXPos = this.entity.getXPos();
+        this.startingYPos = this.entity.getYPos();
         System.out.println("yPosition: " + yPosition);
 
         this.xSpeed = DEFAULT_SPEED;
@@ -93,6 +98,37 @@ public class EntityViewStickman implements EntityView {
         this.frameIdx = 0;
     }
 
+    public boolean fire(Level level) {
+        if (this.mushroomPowerUp) {
+            System.out.println("Shooting fireball...");
+            List<Entity> entityList = level.getEntities();
+
+            String startDirection;
+            if (this.facingL) {
+                startDirection = "left";
+            } else {
+                startDirection = "right";
+            }
+
+            entityList.add(new EntityImplFireball(
+                    "fireball",
+                    25,
+                    25,
+                    this.getXPosition(),
+                    this.getYPosition(),
+                    "/fireball1.png",
+                    Layer.ENTITY_LAYER,
+                    "none",
+                    startDirection,
+                    100,
+                    "fireball",
+                    ".png"
+            ));
+
+//            level.getEntityFireballs
+        }
+        return false;
+    }
     public void setMovement(boolean movingLeft, boolean movingRight) {
         this.movingLeft = movingLeft;
         this.movingRight = movingRight;
@@ -180,6 +216,13 @@ public class EntityViewStickman implements EntityView {
             this.canJump = true;
             this.ySpeed = 0;
         }
+    }
+
+    public void resetPosition() {
+        this.xPosition = this.startingXPos;
+        this.yPosition = this.startingYPos;
+        this.canJump = true;
+        this.ySpeed = 0;
     }
 
     private double getViewOrder(Layer layer) {
@@ -351,11 +394,15 @@ public class EntityViewStickman implements EntityView {
 
     public double getWidth() { return this.width; }
 
+    public double getHeight() { return this.height; }
+
+    public Entity getEntity() { return this.entity; }
+
     public boolean getCanJump() { return this.canJump; }
 
-    public int getLives() { return this.numLives; }
+    public int getNumLives() { return this.numLives; }
 
-    public void decreaseLive() { this.numLives -= -1; }
+    public void decreaseLive() { System.out.println("this.numLives: " + this.numLives); this.numLives -= 1; }
 
     public int getScore() { return this.score; }
 
@@ -368,6 +415,10 @@ public class EntityViewStickman implements EntityView {
     public void setMushroomPowerUp(boolean mushroomPowerUp) {
         this.mushroomPowerUp = mushroomPowerUp;
     }
+
+    public boolean getMushroomPowerUp() { return this.mushroomPowerUp; }
+
+    public boolean getWinStatus() { return this.winStatus; }
 
     public void setWinStatus(boolean winStatus) {
         this.winStatus = winStatus;

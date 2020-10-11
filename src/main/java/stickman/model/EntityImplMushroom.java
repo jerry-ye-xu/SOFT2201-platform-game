@@ -3,6 +3,7 @@ package stickman.model;
 import stickman.view.EntityViewStickman;
 
 public class EntityImplMushroom extends EntityImpl {
+
     public EntityImplMushroom(
         String type,
         double width,

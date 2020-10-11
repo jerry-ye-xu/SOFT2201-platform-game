@@ -13,13 +13,13 @@ public class EntityImpl implements Entity {
     protected final Layer layer;
 
     public EntityImpl(
-        String type,
-        double width,
-        double height,
-        double XPos,
-        double YPos,
-        String imagePath,
-        Layer layer
+            String type,
+            double width,
+            double height,
+            double XPos,
+            double YPos,
+            String imagePath,
+            Layer layer
     ) {
         this.type = type;
         this.width = width;

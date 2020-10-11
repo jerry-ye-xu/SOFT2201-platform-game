@@ -9,8 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewBlob implements EntityView {
-    protected static final double DEFAULT_SPEED = 0.75;
+public class EntityViewFireball implements EntityView {
+    protected static final double DEFAULT_SPEED = 2;
 
     private final Layer layer;
     private double width;
@@ -30,15 +30,15 @@ public class EntityViewBlob implements EntityView {
 
     private List<String> standingFrames;
     private int numStandingFrames;
-    private char[] tagList = {'a', 'b'};
-    private double movementRange;
+    private char[] tagList = {'1'};
+    private double movementRange = 100;
     private final double startingXPos;
 
     private final int frameCountRate = 90;
     private int frameCount = 0;
     private int frameIdx = 0;
 
-    public EntityViewBlob(Entity entity) {
+    public EntityViewFireball(Entity entity) {
         this.entity = entity;
         this.imagePath = entity.getImagePath();
 
@@ -59,24 +59,14 @@ public class EntityViewBlob implements EntityView {
         this.setInitialDirection(entityEnemy);
 
         this.numStandingFrames = this.tagList.length;
-        String pathStart = ((EntityImplBlob) this.entity).getImagePathStart();
-        String pathEnd = ((EntityImplBlob) this.entity).getImagePathEnd();
+        String pathStart = ((EntityImplFireball) this.entity).getImagePathStart();
+        String pathEnd = ((EntityImplFireball) this.entity).getImagePathEnd();
         this.loadEntityFrames(pathStart, pathEnd, this.tagList);
 
         this.imagePath = this.entity.getImagePath();
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
         this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
-
-        System.out.println("BLOB2: this.xPosition - " + this.xPosition);
-        System.out.println("BLOB2: this.yPosition - " + this.yPosition);
-        System.out.println("BLOB2: this.startingXPos - " + this.startingXPos);
-        System.out.println("BLOB2: this.movementRange - " + this.movementRange);
-        System.out.println("BLOB2: this.movingRight - " + this.movingRight);
-        System.out.println("BLOB2: this.movingLeft - " + this.movingLeft);
-        System.out.println("BLOB2: this.height - " + this.height);
-        System.out.println("BLOB2: this.width - " + this.width);
-
     }
 
     @Override
@@ -88,6 +78,9 @@ public class EntityViewBlob implements EntityView {
             this.node.setImage(new Image(this.imagePath));
         }
 
+        System.out.println("updating fireball...");
+        this.updateXPos();
+        this.updateYPos();
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
         this.node.setFitWidth(this.width);
@@ -129,19 +122,17 @@ public class EntityViewBlob implements EntityView {
     }
 
     public void updateXPos() {
-        if (this.xPosition < this.startingXPos - this.movementRange) {
-            this.xPosition = this.startingXPos - this.movementRange;
-            this.setMovement(false, true);
-
-        } else if (this.xPosition > this.startingXPos + this.movementRange) {
-            this.xPosition = this.startingXPos + this.movementRange;
-            this.setMovement(true, false);
-        }
-
         if (this.movingRight) {
             this.xPosition += this.xSpeed * DEFAULT_SPEED;
         } else if (this.movingLeft) {
             this.xPosition -= this.xSpeed * DEFAULT_SPEED;
+        }
+
+        if (this.xPosition > this.startingXPos + this.movementRange) {
+            this.markForDelete();
+        }
+        if (this.xPosition < this.startingXPos - this.movementRange) {
+            this.markForDelete();
         }
     }
 

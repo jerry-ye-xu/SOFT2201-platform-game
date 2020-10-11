@@ -37,6 +37,11 @@ class KeyboardInputHandler{
         }
         pressedKeys.add(keyEvent.getCode());
 
+        if (keyEvent.getCode().equals(KeyCode.SPACE)) {
+            System.out.println("Pressed space.");
+            model.fire();
+        }
+
         if (keyEvent.getCode().equals(KeyCode.UP)) {
             if (model.jump()) {
                 MediaPlayer jumpPlayer = sounds.get("jump");

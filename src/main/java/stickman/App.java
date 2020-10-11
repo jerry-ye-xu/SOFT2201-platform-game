@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
+import stickman.view.SceneGameResult;
 
 public class App extends Application {
 
@@ -32,12 +33,12 @@ public class App extends Application {
 
         String configPath = "config.json";
         String levelName = "levelOne";
-
-        System.out.println(getClass().getResource("/foot_tile.png"));
+        int width = 640;
+        int height = 400;
 
         GameEngine model = new GameEngineImpl(configPath, levelName);
 //        System.out.println("bob");
-        GameWindow window = new GameWindow(model, 640, 400);
+        GameWindow window = new GameWindow(model, width, height);
 //        System.out.println("bob");
         window.run();
 //        System.out.println("bob");
@@ -48,6 +49,14 @@ public class App extends Application {
         primaryStage.show();
 
         window.run();
+//
+//        SceneGameResult endingScene = new SceneGameResult(width, height);
+//        endingScene.setSceneMessage("You Lose! =(");
+//        endingScene.drawScene();
+
+//        if (model.getEntityViewStickman().getNumLives() == 0) {
+//            primaryStage.setScene(endingScene.getScene());
+//        }
     }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {

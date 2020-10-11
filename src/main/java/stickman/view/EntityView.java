@@ -7,6 +7,8 @@ public interface EntityView {
 
     void update(double xViewportOffset);
 
+    public Entity getEntity();
+
     boolean matchesEntity(Entity entity);
 
     void markForDelete();

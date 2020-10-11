@@ -1,26 +1,25 @@
 package stickman.model;
 
-public class EntityImplBlob extends EntityImpl implements EntityMoving {
+public class EntityImplFireball extends EntityImpl implements EntityMoving {
     protected String attack;
     protected String startDirection;
     protected double movementRange;
     protected String imagePathStart;
     protected String imagePathEnd;
 
-    public EntityImplBlob(
-        String type,
-        double width,
-        double height,
-        double XPos,
-        double YPos,
-        String imagePath,
-        Layer layer,
-        double jumpHeight,
-        String attack,
-        String startDirection,
-        double movementRange,
-        String imagePathStart,
-        String imagePathEnd
+    public EntityImplFireball(
+            String type,
+            double width,
+            double height,
+            double XPos,
+            double YPos,
+            String imagePath,
+            Layer layer,
+            String attack,
+            String startDirection,
+            double movementRange,
+            String imagePathStart,
+            String imagePathEnd
     ) {
         super(type, width, height, XPos, YPos, imagePath, layer);
 
@@ -35,9 +34,7 @@ public class EntityImplBlob extends EntityImpl implements EntityMoving {
         Getters and setters
      */
 
-    public double getJumpHeight() {
-        return 0;
-    }
+    public double getJumpHeight() { return 0; }
 
     public void setJumpHeight(double jumpHeight) { }
 
@@ -80,4 +77,6 @@ public class EntityImplBlob extends EntityImpl implements EntityMoving {
     public void setImagePathEnd(String imagePathEnd) {
         this.imagePathEnd = imagePathEnd;
     }
+
 }
+

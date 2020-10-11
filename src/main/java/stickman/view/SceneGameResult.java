@@ -1,10 +1,14 @@
 package stickman.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class SceneGameResult {
     protected int width;
@@ -12,33 +16,57 @@ public class SceneGameResult {
     protected Scene scene;
     protected Pane pane;
     protected Rectangle screen;
-    protected String sceneMessage;
+    protected Label screenLabel;
+    protected String screenMessage;
 
-    public SceneGameResult(int width, int height) {
+    public SceneGameResult(int width, int height, String screenMessage) {
         this.width = width;
         this.height = height;
         this.pane = new Pane();
-        this.scene = new Scene(this.pane, this.width, this.height);
-    }
 
-    public void setSceneMessage(String sceneMessage) {
-        this.sceneMessage = sceneMessage;
-    }
-
-    public String getSceneMessage() {
-        return this.sceneMessage;
-    }
-
-    public void drawScene() {
         this.screen = new Rectangle(0, 0, width, height);
         this.screen.setFill(Paint.valueOf("BLACK"));
         this.screen.setViewOrder(10.0);
 
-        Label sceneLabel = new Label(this.sceneMessage);
-        sceneLabel.setLayoutX(width / 2);
-        sceneLabel.setLayoutY(height / 2);
-        sceneLabel.setViewOrder(0.0);
+        this.screenMessage = screenMessage;
+        this.screenLabel = new Label();
+        this.screenLabel.setText(this.screenMessage);
+        this.screenLabel.setFont(Font.font("Arial", 32));
+        this.screenLabel.setLayoutX(width / 2 - 90);
+//        System.out.println("screenLabel.getLayoutX(): " + screenLabel.getLayoutX());
+        this.screenLabel.setLayoutY(height / 2);
+        this.screenLabel.setTextAlignment(TextAlignment.CENTER);
+        this.screenLabel.setTextFill(Color.ALICEBLUE);
 
-        this.pane.getChildren().addAll(this.screen, sceneLabel);
+        this.scene = new Scene(this.pane, this.width, this.height);
     }
+
+    public Scene getScene() { return this.scene; }
+
+    public Rectangle getScreen() { return this.screen; }
+
+    public Label getScreenLabel() { return this.screenLabel; }
+
+    public void setSceneMessage(String screenMessage) {
+        this.screenMessage = screenMessage;
+    }
+
+    public String getSceneMessage() {
+        return this.screenMessage;
+    }
+
+//    public void drawScene() {
+//        this.screen = new Rectangle(0, 0, width, height);
+//        this.screen.setFill(Paint.valueOf("BLACK"));
+//        this.screen.setViewOrder(10.0);
+//
+//        Label sceneLabel = new Label();
+//        sceneLabel.setText(this.sceneMessage);
+//        sceneLabel.setFont(Font.font("Arial", 24));
+//        sceneLabel.setLayoutX(width / 2);
+//        sceneLabel.setLayoutY(height / 2);
+//        sceneLabel.setViewOrder(0.0);
+//
+//        this.pane.getChildren().addAll(this.screen, sceneLabel);
+//    }
 }

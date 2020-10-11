@@ -4,6 +4,8 @@ import java.util.List;
 
 public class LevelImpl implements Level{
     protected List<Entity> arrayEntities;
+    protected List<EntityImplFireball> arrayFireballs;
+//    protected List<Entity> arrayEntities;
 
     protected double height;
     protected double width;
