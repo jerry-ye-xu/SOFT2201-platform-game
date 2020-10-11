@@ -1,6 +1,6 @@
 package stickman.model;
 
-public interface EntityEnemy extends Entity {
+public interface EntityMoving extends Entity {
     double getJumpHeight();
 
     void setJumpHeight(double jumpHeight);
