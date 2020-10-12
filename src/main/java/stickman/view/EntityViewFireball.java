@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewFireball implements EntityView {
+public class EntityViewFireball extends EntityViewImpl {
     protected static final double DEFAULT_SPEED = 2;
 
     private final Layer layer;
@@ -39,6 +39,7 @@ public class EntityViewFireball implements EntityView {
     private int frameIdx = 0;
 
     public EntityViewFireball(Entity entity) {
+        super(entity);
         this.entity = entity;
         this.imagePath = entity.getImagePath();
 
@@ -78,9 +79,8 @@ public class EntityViewFireball implements EntityView {
             this.node.setImage(new Image(this.imagePath));
         }
 
-        System.out.println("updating fireball...");
-        this.updateXPos();
-        this.updateYPos();
+        System.out.println("hello??");
+
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
         this.node.setFitWidth(this.width);
@@ -136,7 +136,14 @@ public class EntityViewFireball implements EntityView {
         }
     }
 
-    public void updateYPos() { }
+    public void updateYPos() { System.out.println("fireball: this.xPosition - " + this.xPosition);
+        System.out.println("fireball: this.yPosition - " + this.yPosition);
+        System.out.println("fireball: this.startingXPos - " + this.startingXPos);
+        System.out.println("fireball: this.movementRange - " + this.movementRange);
+        System.out.println("fireball: this.movingRight - " + this.movingRight);
+        System.out.println("fireball: this.movingLeft - " + this.movingLeft);
+        System.out.println("fireball: this.height - " + this.height);
+        System.out.println("fireball: this.width - " + this.width);}
 
     private double getViewOrder(Layer layer) {
         switch (layer) {

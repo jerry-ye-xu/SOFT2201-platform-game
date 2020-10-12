@@ -1,11 +1,13 @@
 package stickman.model;
 
+import stickman.view.EntityViewFireball;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class LevelImpl implements Level{
     protected List<Entity> arrayEntities;
-    protected List<EntityImplFireball> arrayFireballs;
-//    protected List<Entity> arrayEntities;
+    protected List<EntityViewFireball> arrayFireballs = new ArrayList<>();
 
     protected double height;
     protected double width;
@@ -29,6 +31,11 @@ public class LevelImpl implements Level{
     @Override
     public List<Entity> getEntities() {
         return this.arrayEntities;
+    }
+
+    @Override
+    public List<EntityViewFireball> getEntityViewFireballList() {
+        return this.arrayFireballs;
     }
 
     @Override

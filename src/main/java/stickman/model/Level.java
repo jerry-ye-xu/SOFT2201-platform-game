@@ -1,9 +1,12 @@
 package stickman.model;
 
+import stickman.view.EntityViewFireball;
+
 import java.util.List;
 
 public interface Level {
     List<Entity> getEntities();
+    List<EntityViewFireball> getEntityViewFireballList();
 
     double getHeight();
     double getWidth();

@@ -14,6 +14,8 @@ public class EntityViewImpl implements EntityView {
     private boolean delete = false;
     private ImageView node;
     private String imagePath;
+    private double xPosition;
+    private double yPosition;
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
@@ -24,8 +26,10 @@ public class EntityViewImpl implements EntityView {
         this.node = new ImageView(imageURL.toExternalForm());
         this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
 
+        this.xPosition = entity.getXPos();
+        this.yPosition = entity.getYPos();
         this.node.setX(entity.getXPos());
-        this.node.setY(entity.getYPos());
+        this.node.setY(entity.getXPos());
         this.node.setFitHeight(entity.getHeight());
         this.node.setFitWidth(entity.getWidth());
         this.node.setPreserveRatio(true);
@@ -46,19 +50,25 @@ public class EntityViewImpl implements EntityView {
     @Override
     public void update(double xViewportOffset) {
         String newPath = entity.getImagePath();
-//        System.out.println("Inside EntityViewImpl");
-//        System.out.println("this.entity: " + this.entity);
         if (!imagePath.equals(newPath)) {
             imagePath = newPath;
             node.setImage(new Image(imagePath));
         }
-        node.setX(entity.getXPos() - xViewportOffset);
-        node.setY(entity.getYPos());
+
+//        System.out.println("UPDATE IN ENTITYVIEWIMPL");
+        node.setX(this.xPosition - xViewportOffset);
+        node.setY(this.yPosition);
         node.setFitHeight(entity.getHeight());
         node.setFitWidth(entity.getWidth());
         node.setPreserveRatio(true);
         delete = false;
     }
+
+    @Override
+    public void updateXPos() { }
+
+    @Override
+    public void updateYPos() { }
 
     @Override
     public Entity getEntity() { return this.entity; }

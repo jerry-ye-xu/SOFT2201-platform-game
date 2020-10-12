@@ -22,7 +22,6 @@ public class GameEngineImpl implements GameEngine {
     private Level gameLevel;
     private EntityViewStickman entityViewStickman;
     private List<EntityViewBlob> entityViewBlobList;
-    private List<EntityViewFireball> entityViewFireballList;
 
     private List<Entity> platformList;
     private List<Entity> powerUpList;
@@ -96,10 +95,16 @@ public class GameEngineImpl implements GameEngine {
         this.entityViewStickman.updateXPos(this.gameLevel);
         this.entityViewStickman.updateYPos(this.gameLevel);
 
-//        for (EntityViewBlob blob: entityViewBlobList) {
-//            blob.updateXPos();
-//            blob.updateYPos();
-//        }
+        for (EntityViewBlob blob: entityViewBlobList) {
+            blob.updateXPos();
+            blob.updateYPos();
+        }
+
+        for (EntityViewFireball fireball: this.getCurrentLevel().getEntityViewFireballList()) {
+//            System.out.println("fireball??");
+            fireball.updateXPos();
+            fireball.updateYPos();
+        }
 
 //        System.out.println(this.entityViewStickman.getXPosition());
 //        System.out.println(this.entityViewStickman.getYPosition());

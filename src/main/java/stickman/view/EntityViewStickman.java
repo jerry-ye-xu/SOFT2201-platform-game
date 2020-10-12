@@ -110,22 +110,24 @@ public class EntityViewStickman implements EntityView {
                 startDirection = "right";
             }
 
-            entityList.add(new EntityImplFireball(
-                    "fireball",
-                    25,
-                    25,
-                    this.getXPosition(),
-                    this.getYPosition(),
-                    "/fireball1.png",
-                    Layer.ENTITY_LAYER,
-                    "none",
-                    startDirection,
-                    100,
-                    "fireball",
-                    ".png"
-            ));
+            EntityImplFireball fireBallEntity = new EntityImplFireball(
+                "fireball",
+                25,
+                25,
+                this.getXPosition(),
+                this.getYPosition(),
+                "/fireball1.png",
+                Layer.ENTITY_LAYER,
+                "none",
+                startDirection,
+                250,
+                "fireball",
+                ".png"
+            );
 
-//            level.getEntityFireballs
+//            entityList.add(fireBallEntity);
+
+            level.getEntityViewFireballList().add(new EntityViewFireball(fireBallEntity));
         }
         return false;
     }
@@ -217,6 +219,10 @@ public class EntityViewStickman implements EntityView {
             this.ySpeed = 0;
         }
     }
+
+    public void updateXPos() { }
+
+    public void updateYPos() { }
 
     public void resetPosition() {
         this.xPosition = this.startingXPos;
