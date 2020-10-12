@@ -55,7 +55,6 @@ public class EntityViewImpl implements EntityView {
             node.setImage(new Image(imagePath));
         }
 
-//        System.out.println("UPDATE IN ENTITYVIEWIMPL");
         node.setX(this.xPosition - xViewportOffset);
         node.setY(this.yPosition);
         node.setFitHeight(entity.getHeight());
