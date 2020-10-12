@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewStickman implements EntityView {
-    protected static final double DEFAULT_SPEED = 2;
+    protected static final double DEFAULT_SPEED = 1;
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
 
@@ -59,7 +59,7 @@ public class EntityViewStickman implements EntityView {
     private final int idxStartFramesStillLeft = 4;
     private final int numFramesStillLeft = 3;
 
-    private final int frameCountRate = 90;
+    private final int frameCountRate = 30;
     private int frameCount = 0;
     private int frameIdx = 0;
 

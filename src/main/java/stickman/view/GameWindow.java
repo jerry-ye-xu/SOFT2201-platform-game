@@ -19,6 +19,7 @@ import java.util.List;
 public class GameWindow {
     private final int width;
     private final int height;
+    private SceneStats gameStats;
     private Scene scene;
     private Pane pane;
     private GameEngine model;
@@ -56,6 +57,10 @@ public class GameWindow {
             System.out.println("blob: " + blob);
             this.pane.getChildren().add(blob.getNode());
         }
+        int numLives = this.model.getEntityViewStickman().getNumLives();
+        int score = this.model.getEntityViewStickman().getScore();
+        this.gameStats = new SceneStats(numLives, score);
+        this.pane.getChildren().addAll(gameStats.getlivesLabel(), gameStats.getScoreLabel());
     }
 
     public Scene getScene() {
@@ -72,6 +77,7 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
+        this.gameStats.updateStats(this.model.getEntityViewStickman());
 
         List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
@@ -101,7 +107,7 @@ public class GameWindow {
             for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
                 ImageView blobView = (ImageView) blob.getNode();
                 if (fireballView.intersects(blobView.getLayoutBounds())) {
-                    this.model.getEntityViewStickman().increaseScore(100);
+                    this.model.getEntityViewStickman().increaseScore(50);
 
                     blob.markForDelete();
                     fireball.markForDelete();
