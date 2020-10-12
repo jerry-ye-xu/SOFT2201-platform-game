@@ -82,15 +82,27 @@ public class GameWindow {
         this.gameStats.updateStats(this.model.getEntityViewStickman());
         this.refreshStickmanFrame(this.model, xViewportOffset);
 
-        List<Entity> entities = this.model.getCurrentLevel().getEntities();
-
-        for (EntityView entityView: entityViews) {
-            entityView.markForDelete();
-        }
+        /*
+            Handling Blob Collision
+         */
 
         for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
             blob.update(xViewportOffset);
         }
+
+        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
+            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
+            ImageView blobView = (ImageView) blob.getNode();
+            if (stickmanView.intersects(blobView.getLayoutBounds())) {
+                this.model.getEntityViewStickman().decreaseLive();
+                this.model.getEntityViewStickman().setMushroomPowerUp(false);
+                this.model.getEntityViewStickman().resetPosition();
+            }
+        }
+
+        /*
+            Handling Fireball mechanism
+         */
 
         for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
             fireball.update(xViewportOffset);
@@ -111,6 +123,7 @@ public class GameWindow {
                 }
             }
 
+            // If fireball hits a stationary object remove it.
             for (EntityView entityView: entityViews) {
                 ImageView entityNode = (ImageView) entityView.getNode();
                 if (fireballView.intersects(entityNode.getLayoutBounds())) {
@@ -137,6 +150,10 @@ public class GameWindow {
             }
         }
 
+        /*
+            Handling Tile/Platform Collision
+         */
+
         onPlatformTiles = 0;
         for (EntityView entityView: entityViews) {
             ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
@@ -160,20 +177,19 @@ public class GameWindow {
             this.model.getEntityViewStickman().setOnPlatform(false);
         }
 
+        /*
+            Handling stationary entities
+         */
 
-//        if (this.model.getEntityViewStickman().getOnPlatform()) {
-//            System.out.println("this.model.getEntityViewStickman().getOnPlatform(): " + this.model.getEntityViewStickman().getOnPlatform());
-//            this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
-//        } else {
-//            this.model.getEntityViewStickman().setYOffset(0);
-//        }
+        List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
+        for (EntityView entityView: entityViews) {
+            entityView.markForDelete();
+        }
 
         for (EntityView entityView: entityViews) {
             ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
             ImageView entityImage = (ImageView) entityView.getNode();
-//            System.out.println("blobView.getLayoutBounds(): " + blobView.getLayoutBounds());
-//            System.out.println("stickmanView.getLayoutBounds(): " + stickmanView.getLayoutBounds());
             if (
                 stickmanView.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("flag")
@@ -181,6 +197,7 @@ public class GameWindow {
                 System.out.println("Intersects an flag");
                 this.model.getEntityViewStickman().setWinStatus(true);
             }
+
             if (
                 stickmanView.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("mushroom")
@@ -193,9 +210,6 @@ public class GameWindow {
         }
 
         double heroXPos = model.getEntityViewStickman().getXPosition();
-//        System.out.println("BEFORE -= xViewportOffset");
-//        System.out.println("xViewportOffset: " + xViewportOffset);
-//        System.out.println("heroXPos: " + heroXPos);
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
@@ -206,11 +220,7 @@ public class GameWindow {
                 }
             }
         } else if (heroXPos > width - VIEWPORT_MARGIN) {
-//            System.out.println("MOVING THE FRAME...");
-//            System.out.println("heroXPos: " + heroXPos);
-//            System.out.println("xViewportOffset: " + xViewportOffset);
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
-//            System.out.println("xViewportOffset: " + xViewportOffset);
 
             double stickmanWidth = this.model.getEntityViewStickman().getWidth();
 
@@ -219,64 +229,35 @@ public class GameWindow {
             }
         }
 
-//        System.out.println("AFTER updating xViewportOffset");
-//        System.out.println("heroXPos: " + heroXPos);
-//        System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
-//        System.out.println("width: " + width);
-//        System.out.println("xViewportOffset: " + xViewportOffset);
-
-        backgroundDrawer.update(xViewportOffset);
-
         for (Entity entity: entities) {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {
                     notFound = false;
-//                    ImageView blobView = (ImageView) view.getNode();
-//                    System.out.println("view.getLayoutBounds(): " + blobView.getLayoutBounds());
-//                    System.out.println(view.getEntity());getType()
-//                    System.out.println(view.getEntity().);
-                    if (view.getEntity().getType().equals("fireball")) {
-                        System.out.println(view.getEntity().getType());
-                        System.out.println(view.getNode().getLayoutX());
-                        System.out.println(view.getNode().getLayoutY());
-                    }
                     view.update(xViewportOffset);
                     break;
                 }
             }
             if (notFound) {
                 EntityView entityView;
-//                if (entity.getType().equals("fireball")) {
-//                    entityView = new EntityViewFireball(entity);
-//                } else {
-//                    entityView = new EntityViewImpl(entity);
-//                }
                 entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
-
-//                ImageView blobView = (ImageView) entityView.getNode();
-//                System.out.println("blobView.getLayoutBounds(): " + blobView.getLayoutBounds());
-//                System.out.println(entityView.getEntity());
                 pane.getChildren().add(entityView.getNode());
             }
         }
 
         for (EntityView entityView: entityViews) {
-//            System.out.println(entityView);
-//            System.out.println(entityView.getEntity());
-//            System.out.println(entityView.getNode());
-//            System.out.println(entityView.getNode().getLayoutBounds());
             if (entityView.isMarkedForDelete()) {
-                System.out.println(entityView);
-                System.out.println(entityView.getEntity());
-                System.out.println(entityView.getNode());
-                System.out.println(entityView.getNode().getLayoutBounds());
                 pane.getChildren().remove(entityView.getNode());
             }
         }
 
+        backgroundDrawer.update(xViewportOffset);
         entityViews.removeIf(EntityView::isMarkedForDelete);
+
+        /*
+            Game ending conditions.
+         */
 
         if (this.model.getEntityViewStickman().getNumLives() == 0) {
             SceneGameResult deathScene = new SceneGameResult(this.width, this.height, "You lose! =(");
@@ -290,14 +271,6 @@ public class GameWindow {
             this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
         }
 
-//        if (
-//            this.model.getEntityViewStickman().getNode().intersects(entityView.getNode().getLayoutBounds()) &&
-//            entityView.getEntity().getType().equals("flag")
-//        ) {
-//            SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
-//            this.pane.getChildren().removeAll();
-//            this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
-//        }
     }
 
     private void refreshStickmanFrame(GameEngine model, double xViewportOffset) {
