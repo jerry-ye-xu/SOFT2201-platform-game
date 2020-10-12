@@ -80,6 +80,7 @@ public class GameWindow {
     private void draw() {
         this.model.tick();
         this.gameStats.updateStats(this.model.getEntityViewStickman());
+        this.refreshStickmanFrame(this.model, xViewportOffset);
 
         List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
@@ -87,24 +88,17 @@ public class GameWindow {
             entityView.markForDelete();
         }
 
-        this.refreshStickmanFrame(this.model, xViewportOffset);
-
         for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
             blob.update(xViewportOffset);
         }
 
         for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
+            fireball.update(xViewportOffset);
+
             if (!pane.getChildren().contains(fireball.getNode())) {
                 pane.getChildren().add(fireball.getNode());
             }
-        }
 
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-            System.out.println("GameWindow update...");
-            fireball.update(xViewportOffset);
-        }
-
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
             ImageView fireballView = (ImageView) fireball.getNode();
             for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
                 ImageView blobView = (ImageView) blob.getNode();
@@ -116,26 +110,18 @@ public class GameWindow {
                     pane.getChildren().remove(blob.getNode());
                 }
             }
+
             for (EntityView entityView: entityViews) {
                 ImageView entityNode = (ImageView) entityView.getNode();
                 if (fireballView.intersects(entityNode.getLayoutBounds())) {
                     fireball.markForDelete();
-//                    if (entityView.getEntity().getType().equals("blob")) {
-//                        entityView.markForDelete();
-//                        pane.getChildren().remove(fireball.getNode());
-//                    }
                 }
             }
-        }
-//        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-//            ImageView fireballView = (ImageView) fireball.getNode();
-//
-//        }
 
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
             if (fireball.isMarkedForDelete()) {
                 pane.getChildren().remove(fireball.getNode());
             }
+
         }
 
         this.model.getCurrentLevel().getEntityViewFireballList().removeIf(EntityView::isMarkedForDelete);
@@ -145,7 +131,6 @@ public class GameWindow {
             ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
             ImageView blobView = (ImageView) blob.getNode();
             if (stickmanView.intersects(blobView.getLayoutBounds())) {
-                System.out.println("Intersects!");
                 this.model.getEntityViewStickman().decreaseLive();
                 this.model.getEntityViewStickman().setMushroomPowerUp(false);
                 this.model.getEntityViewStickman().resetPosition();
@@ -162,43 +147,16 @@ public class GameWindow {
             ) {
                 if ((stickmanView.getY() < entityImage.getY())
                 ) {
-                    System.out.println("Intersects a platform");
-                    System.out.println("entityImage.getY(): " + entityImage.getY());
-                    System.out.println("stickmanView.getY(): " + stickmanView.getY());
-//                if (stickmanView.getY() > entityImage.getY()) {
-                    System.out.println("Set on platform");
-                    System.out.println(this.model.getCurrentLevel().getFloorHeight() - entityImage.getY());
-                    System.out.println("this.model.getEntityViewStickman().getCanJump()");
-                    System.out.println(this.model.getEntityViewStickman().getCanJump());
-//                this.yViewportOffset = this.model.getCurrentLevel().getFloorHeight()
-//                        entityImage.getY() -
-//                        this.model.getEntityViewStickman().getHeight()
-//                ;
                     onPlatformTiles += 1;
-                    System.out.println("onPlatformTile LOOP: " + onPlatformTiles);
-                    System.out.println("Touching tiles!!");
-//                this.model.getEntityViewStickman().setYspeed(0);
-//                this.model.getEntityViewStickman().setYPosition(
-//                        stickmanView.getY() -
-//                        this.model.getEntityViewStickman().getHeight()
-//                );
-                    System.out.println(this.model.getEntityViewStickman().getXPosition());
-                    System.out.println(this.model.getEntityViewStickman().getYPosition());
-//                }
                     break;
                 } else {
                     this.model.getEntityViewStickman().setYspeed(0);
                 }
             }
-//            System.out.println("Not in platform anymore!");
         }
         if (onPlatformTiles > 0)  {
-            System.out.println("onPlatformTile BOOLEAN: " + onPlatformTiles);
             this.model.getEntityViewStickman().setOnPlatform(true);
         } else {
-            System.out.println("Not touching tiles??");
-            System.out.println(this.model.getEntityViewStickman().getXPosition());
-            System.out.println(this.model.getEntityViewStickman().getYPosition());
             this.model.getEntityViewStickman().setOnPlatform(false);
         }
 
