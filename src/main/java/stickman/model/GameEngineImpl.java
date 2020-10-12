@@ -57,6 +57,7 @@ public class GameEngineImpl implements GameEngine {
     public boolean jump() {
         if (this.entityViewStickman.getCanJump()) {
             System.out.println("this.entityViewStickman.jump()");
+            this.entityViewStickman.setOnPlatform(false);
             this.entityViewStickman.jump();
             System.out.println(this.entityViewStickman.getYPosition());
             return true;

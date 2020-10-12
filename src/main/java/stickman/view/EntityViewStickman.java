@@ -183,10 +183,13 @@ public class EntityViewStickman implements EntityView {
     public void updateYPos(Level level) {
         if (this.onPlatform) {
             this.ySpeed = 0;
+            this.canJump = true;
+//            this.yPosition -= this.height;
         } else if (!this.onPlatform)  {
             this.ySpeed += DROP_ACCEL;
             this.yPosition += this.ySpeed;
         }
+
 //        System.out.println("DECREASE: this.yPosition: " + this.yPosition);
 
 //        for (Platform platform: level.getPlatforms()) {

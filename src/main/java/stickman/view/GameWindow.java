@@ -158,30 +158,37 @@ public class GameWindow {
             ImageView entityImage = (ImageView) entityView.getNode();
             if (
                 stickmanView.intersects(entityImage.getLayoutBounds()) &&
-                entityView.getEntity().getType().equals("tile") &&
-                (stickmanView.getY() > entityImage.getY())
+                entityView.getEntity().getType().equals("tile")
             ) {
-                System.out.println("Intersects a platform");
-                System.out.println("entityImage.getY(): " + entityImage.getY());
-                System.out.println("stickmanView.getY(): " + stickmanView.getY());
+                if ((stickmanView.getY() < entityImage.getY())
+                ) {
+                    System.out.println("Intersects a platform");
+                    System.out.println("entityImage.getY(): " + entityImage.getY());
+                    System.out.println("stickmanView.getY(): " + stickmanView.getY());
 //                if (stickmanView.getY() > entityImage.getY()) {
-                System.out.println("Set on platform");
-                System.out.println(this.model.getCurrentLevel().getFloorHeight() - entityImage.getY());
-                this.yViewportOffset = this.model.getCurrentLevel().getFloorHeight() - entityImage.getY();
-                onPlatformTiles += 1;
-                System.out.println("onPlatformTile LOOP: " + onPlatformTiles);
-                System.out.println("Touching tiles!!");
-                this.model.getEntityViewStickman().setYspeed(0);
-                this.model.getEntityViewStickman().setYPosition(
-                    this.model.getEntityViewStickman().getYPosition()
-                );
-                System.out.println(this.model.getEntityViewStickman().getXPosition());
-                System.out.println(this.model.getEntityViewStickman().getYPosition());
-//                this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
-//                this.model.getEntityViewStickman().setOnPlatform(true);
-//                this.model.getEntityViewStickman().setOnPlatform(true);
+                    System.out.println("Set on platform");
+                    System.out.println(this.model.getCurrentLevel().getFloorHeight() - entityImage.getY());
+                    System.out.println("this.model.getEntityViewStickman().getCanJump()");
+                    System.out.println(this.model.getEntityViewStickman().getCanJump());
+//                this.yViewportOffset = this.model.getCurrentLevel().getFloorHeight()
+//                        entityImage.getY() -
+//                        this.model.getEntityViewStickman().getHeight()
+//                ;
+                    onPlatformTiles += 1;
+                    System.out.println("onPlatformTile LOOP: " + onPlatformTiles);
+                    System.out.println("Touching tiles!!");
+//                this.model.getEntityViewStickman().setYspeed(0);
+//                this.model.getEntityViewStickman().setYPosition(
+//                        stickmanView.getY() -
+//                        this.model.getEntityViewStickman().getHeight()
+//                );
+                    System.out.println(this.model.getEntityViewStickman().getXPosition());
+                    System.out.println(this.model.getEntityViewStickman().getYPosition());
 //                }
-                break;
+                    break;
+                } else {
+                    this.model.getEntityViewStickman().setYspeed(0);
+                }
             }
 //            System.out.println("Not in platform anymore!");
         }
