@@ -27,6 +27,7 @@ public class GameWindow {
     private List<EntityView> entityViews;
     private BackgroundDrawer backgroundDrawer;
 
+    private int onPlatformTiles = 0;
     private double xViewportOffset = 0.0;
     private double yViewportOffset = 0.0;
     private static final double VIEWPORT_MARGIN = 320.0;
@@ -151,7 +152,7 @@ public class GameWindow {
             }
         }
 
-        boolean tmpOnPlatform = false;
+        onPlatformTiles = 0;
         for (EntityView entityView: entityViews) {
             ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
             ImageView entityImage = (ImageView) entityView.getNode();
@@ -167,18 +168,41 @@ public class GameWindow {
                 System.out.println("Set on platform");
                 System.out.println(this.model.getCurrentLevel().getFloorHeight() - entityImage.getY());
                 this.yViewportOffset = this.model.getCurrentLevel().getFloorHeight() - entityImage.getY();
-                tmpOnPlatform = true;
-                System.out.println("tmpOnPlatform: " + tmpOnPlatform);
+                onPlatformTiles += 1;
+                System.out.println("onPlatformTile LOOP: " + onPlatformTiles);
+                System.out.println("Touching tiles!!");
+                this.model.getEntityViewStickman().setYspeed(0);
+                this.model.getEntityViewStickman().setYPosition(
+                    this.model.getEntityViewStickman().getYPosition()
+                );
+                System.out.println(this.model.getEntityViewStickman().getXPosition());
+                System.out.println(this.model.getEntityViewStickman().getYPosition());
+//                this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
+//                this.model.getEntityViewStickman().setOnPlatform(true);
 //                this.model.getEntityViewStickman().setOnPlatform(true);
 //                }
                 break;
             }
 //            System.out.println("Not in platform anymore!");
         }
-        if (tmpOnPlatform) {
-            System.out.println("tmpOnPlatform: " + tmpOnPlatform);
+        if (onPlatformTiles > 0)  {
+            System.out.println("onPlatformTile BOOLEAN: " + onPlatformTiles);
+            this.model.getEntityViewStickman().setOnPlatform(true);
+        } else {
+            System.out.println("Not touching tiles??");
+            System.out.println(this.model.getEntityViewStickman().getXPosition());
+            System.out.println(this.model.getEntityViewStickman().getYPosition());
+            this.model.getEntityViewStickman().setOnPlatform(false);
         }
-        this.model.getEntityViewStickman().setOnPlatform(tmpOnPlatform);
+
+
+//        if (this.model.getEntityViewStickman().getOnPlatform()) {
+//            System.out.println("this.model.getEntityViewStickman().getOnPlatform(): " + this.model.getEntityViewStickman().getOnPlatform());
+//            this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
+//        } else {
+//            this.model.getEntityViewStickman().setYOffset(0);
+//        }
+
 
         for (EntityView entityView: entityViews) {
             ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
@@ -201,13 +225,6 @@ public class GameWindow {
                 this.model.getEntityViewStickman().increaseScore(100);
                 this.model.getEntityViewStickman().setMushroomPowerUp(true);
             }
-        }
-
-        if (this.model.getEntityViewStickman().getOnPlatform()) {
-            System.out.println("this.model.getEntityViewStickman().getOnPlatform(): " + this.model.getEntityViewStickman().getOnPlatform());
-            this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
-//        } else {
-//            this.model.getEntityViewStickman().setYOffset(0);
         }
 
         double heroXPos = model.getEntityViewStickman().getXPosition();

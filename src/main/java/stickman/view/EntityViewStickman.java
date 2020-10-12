@@ -181,8 +181,12 @@ public class EntityViewStickman implements EntityView {
     }
 
     public void updateYPos(Level level) {
-        this.ySpeed += DROP_ACCEL;
-        this.yPosition += this.ySpeed;
+        if (this.onPlatform) {
+            this.ySpeed = 0;
+        } else if (!this.onPlatform)  {
+            this.ySpeed += DROP_ACCEL;
+            this.yPosition += this.ySpeed;
+        }
 //        System.out.println("DECREASE: this.yPosition: " + this.yPosition);
 
 //        for (Platform platform: level.getPlatforms()) {
@@ -427,4 +431,14 @@ public class EntityViewStickman implements EntityView {
         this.winStatus = winStatus;
     }
 
+    public void setYspeed(int ySpeed) {
+        this.ySpeed = 0;
+    }
+
+    public void setXPosition(double xPosition) {
+        this.xPosition = xPosition;
+    }
+    public void setYPosition(double yPosition) {
+        this.yPosition = yPosition;
+    }
 }
