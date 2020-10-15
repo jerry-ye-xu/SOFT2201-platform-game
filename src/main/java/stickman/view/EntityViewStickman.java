@@ -124,7 +124,7 @@ public class EntityViewStickman extends EntityViewImplMoving {
                 ".png"
             );
 
-            level.getEntityViewFireballList().add(new EntityViewFireball(fireBallEntity));
+//            level.getEntityViewFireballList().add(new EntityViewFireball(fireBallEntity));
         }
         return false;
     }
@@ -173,10 +173,6 @@ public class EntityViewStickman extends EntityViewImplMoving {
             this.ySpeed = 0;
         }
     }
-
-    public void updateXPos() { }
-
-    public void updateYPos() { }
 
     public double getYOffset() {
         return this.yOffset;

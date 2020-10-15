@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface Level {
     List<Entity> getEntities();
-    List<EntityViewBlob> getEntityViewBlobList();
-    List<EntityViewFireball> getEntityViewFireballList();
-
+//    List<EntityViewBlob> getEntityViewBlobList();
+//    List<EntityViewFireball> getEntityViewFireballList();
+//
     EntityViewStickman getEntityViewStickman();
 
     double getHeight();

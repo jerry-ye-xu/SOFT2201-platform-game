@@ -37,11 +37,11 @@ public class JsonParserImpl implements JsonParser {
 
         Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
 
-        List<Entity> entityListStationary = new ArrayList<>();
-        entityListStationary.addAll(platformList);
-        entityListStationary.addAll(powerUpList);
-//        entityList.addAll(enemyList);
-        entityListStationary.add(flag);
+        List<Entity> entityList = new ArrayList<>();
+        entityList.addAll(platformList);
+        entityList.addAll(powerUpList);
+        entityList.addAll(enemyList);
+        entityList.add(flag);
 
 //        System.out.println("entityList.size()");
 //        System.out.println(entityListStationary.size());
@@ -50,12 +50,10 @@ public class JsonParserImpl implements JsonParser {
         double width = ((Long) levelDict.get("width")).doubleValue();
         double floorHeight = ((Long) levelDict.get("floorHeight")).doubleValue();
 
-        EntityImplStickman stickmanEntity = this.buildStickman(levelName);
+        Entity stickmanEntity = this.buildStickman(levelName);
 
         Level gameLevel = new LevelImpl(
-                entityListStationary,
-                enemyList,
-                stickmanEntity,
+                entityList,
                 height,
                 width,
                 floorHeight,
@@ -128,7 +126,7 @@ public class JsonParserImpl implements JsonParser {
         return objList;
     }
 
-    private EntityImplStickman buildStickman(String levelName) {
+    private Entity buildStickman(String levelName) {
         JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
 
         String size = (String) this.jsonDict.get("stickmanSize");
@@ -153,7 +151,7 @@ public class JsonParserImpl implements JsonParser {
 //        System.out.println("startingYPos: " + startingYPos);
 //        System.out.println("height: " + height);
 
-        EntityImplStickman stickmanEntity = new EntityImplStickman(
+        Entity stickmanEntity = new EntityImplStickman(
                 "stickman",
                 width,
                 height,

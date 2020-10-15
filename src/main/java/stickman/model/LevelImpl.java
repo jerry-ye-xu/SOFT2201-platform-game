@@ -16,10 +16,10 @@ public class LevelImpl implements Level {
     protected List<Entity> arrayEntities;
 
     protected List<Entity> arrayEnemies;
-    protected List<EntityViewBlob> viewBlobs = new ArrayList<>();
+//    protected List<EntityViewBlob> viewBlobs = new ArrayList<>();
 
-    protected List<EntityMoving> arrayFireballs;
-    protected List<EntityViewFireball> viewsFireballs = new ArrayList<>();
+//    protected List<EntityMoving> arrayFireballs;
+//    protected List<EntityViewFireball> viewsFireballs = new ArrayList<>();
 
     protected double height;
     protected double width;
@@ -28,21 +28,21 @@ public class LevelImpl implements Level {
 
     public LevelImpl(
         List<Entity> arrayEntities,
-        List<Entity> arrayEnemies,
-        EntityImplStickman stickmanEntity,
+//        List<Entity> arrayEnemies,
+//        EntityImplStickman stickmanEntity,
         double height,
         double width,
         double floorHeight,
         double heroXPosition
     ) {
         this.arrayEntities = arrayEntities;
-        this.arrayEnemies = arrayEnemies;
-        this.stickmanEntity = stickmanEntity;
+//        this.arrayEnemies = arrayEnemies;
+//        this.stickmanEntity = stickmanEntity;
 
-        for (Entity enemy: arrayEnemies) {
-            viewBlobs.add(new EntityViewBlob(enemy));
-        }
-        stickmanView = new EntityViewStickman(stickmanEntity);
+//        for (Entity enemy: arrayEnemies) {
+//            viewBlobs.add(new EntityViewBlob(enemy));
+//        }
+//        stickmanView = new EntityViewStickman(stickmanEntity);
 
         this.height = height;
         this.width = width;
@@ -55,15 +55,12 @@ public class LevelImpl implements Level {
         return this.arrayEntities;
     }
 
-    @Override
-    public List<EntityViewBlob> getEntityViewBlobList() { return this.viewBlobs; }
-
-    @Override
-    public List<EntityViewFireball> getEntityViewFireballList() {
-        return this.viewsFireballs;
-    }
-
-    @Override
+//    @Override
+//    public List<EntityViewBlob> getEntityViewBlobList() { return this.viewBlobs; }
+//
+//    @Override
+//    public List<EntityViewFireball> getEntityViewFireballList() { return this.viewsFireballs; }
+//
     public EntityViewStickman getEntityViewStickman() { return this.stickmanView; }
 
     @Override

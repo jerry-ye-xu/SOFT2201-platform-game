@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewBlob implements EntityView {
+public class EntityViewBlob extends EntityViewImplMoving {
     protected static final double DEFAULT_SPEED = 0.75;
 
     private final Layer layer;
@@ -39,6 +39,7 @@ public class EntityViewBlob implements EntityView {
     private int frameIdx = 0;
 
     public EntityViewBlob(Entity entity) {
+        super(entity);
         this.entity = entity;
         this.imagePath = entity.getImagePath();
 
@@ -77,6 +78,11 @@ public class EntityViewBlob implements EntityView {
             this.imagePath = imagePath;
             this.node.setImage(new Image(this.imagePath));
         }
+
+
+
+        this.updateYPos();
+        this.updateXPos();
 
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
