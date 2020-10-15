@@ -4,13 +4,13 @@ import java.net.URL;
 
 public class EntityImpl implements Entity {
 
-    protected final String type;
-    protected final double width;
-    protected final double height;
-    protected double XPos;
-    protected double YPos;
-    protected final String imagePath;
-    protected final Layer layer;
+    private final String type;
+    private final double width;
+    private final double height;
+    private double XPos;
+    private double YPos;
+    private final String imagePath;
+    private final Layer layer;
 
     public EntityImpl(
             String type,

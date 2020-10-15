@@ -83,9 +83,7 @@ public class EntityViewImpl implements EntityView {
     }
 
     @Override
-    public Node getNode() {
-        return this.node;
-    }
+    public Node getNode() { return this.node; }
 
     @Override
     public boolean isMarkedForDelete() {

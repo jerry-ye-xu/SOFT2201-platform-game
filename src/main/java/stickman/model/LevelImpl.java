@@ -1,13 +1,25 @@
 package stickman.model;
 
+import javafx.scene.image.ImageView;
+import stickman.view.EntityView;
+import stickman.view.EntityViewBlob;
 import stickman.view.EntityViewFireball;
+import stickman.view.EntityViewStickman;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelImpl implements Level{
+public class LevelImpl implements Level {
+    protected EntityImplStickman stickmanEntity;
+    protected EntityViewStickman stickmanView;
+
     protected List<Entity> arrayEntities;
-    protected List<EntityViewFireball> arrayFireballs = new ArrayList<>();
+
+    protected List<Entity> arrayEnemies;
+    protected List<EntityViewBlob> viewBlobs = new ArrayList<>();
+
+    protected List<EntityMoving> arrayFireballs;
+    protected List<EntityViewFireball> viewsFireballs = new ArrayList<>();
 
     protected double height;
     protected double width;
@@ -16,12 +28,22 @@ public class LevelImpl implements Level{
 
     public LevelImpl(
         List<Entity> arrayEntities,
+        List<Entity> arrayEnemies,
+        EntityImplStickman stickmanEntity,
         double height,
         double width,
         double floorHeight,
         double heroXPosition
     ) {
         this.arrayEntities = arrayEntities;
+        this.arrayEnemies = arrayEnemies;
+        this.stickmanEntity = stickmanEntity;
+
+        for (Entity enemy: arrayEnemies) {
+            viewBlobs.add(new EntityViewBlob(enemy));
+        }
+        stickmanView = new EntityViewStickman(stickmanEntity);
+
         this.height = height;
         this.width = width;
         this.floorHeight = floorHeight;
@@ -34,9 +56,15 @@ public class LevelImpl implements Level{
     }
 
     @Override
+    public List<EntityViewBlob> getEntityViewBlobList() { return this.viewBlobs; }
+
+    @Override
     public List<EntityViewFireball> getEntityViewFireballList() {
-        return this.arrayFireballs;
+        return this.viewsFireballs;
     }
+
+    @Override
+    public EntityViewStickman getEntityViewStickman() { return this.stickmanView; }
 
     @Override
     public double getHeight() {
@@ -48,7 +76,6 @@ public class LevelImpl implements Level{
 
     @Override
     public void tick() {
-
     }
 
     @Override
@@ -62,22 +89,14 @@ public class LevelImpl implements Level{
     }
 
     @Override
-    public boolean jump() {
-        return false;
-    }
+    public void jump() { }
 
     @Override
-    public boolean moveLeft() {
-        return false;
-    }
+    public void moveLeft() { }
 
     @Override
-    public boolean moveRight() {
-        return false;
-    }
+    public void moveRight() { }
 
     @Override
-    public boolean stopMoving() {
-        return false;
-    }
+    public void stopMoving() { }
 }

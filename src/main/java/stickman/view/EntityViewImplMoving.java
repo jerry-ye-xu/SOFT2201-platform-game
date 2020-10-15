@@ -35,6 +35,7 @@ public class EntityViewImplMoving extends EntityViewImpl {
 
     public EntityViewImplMoving(Entity entity) {
         super(entity);
+        this.entity = entity;
 //        System.out.println("Inside EntityViewImplMoving");
 //        System.out.println("this.entity: " + this.entity);
         this.layer = this.entity.getLayer();
@@ -104,7 +105,7 @@ public class EntityViewImplMoving extends EntityViewImpl {
         Loading and updating frames
      */
 
-    protected List<String> loadFramePaths(String pathStart, String pathEnd, int startInt, int numFrames) {
+    private List<String> loadFramePaths(String pathStart, String pathEnd, int startInt, int numFrames) {
         List<String> imageFrames = new ArrayList<>();
         for (int i = startInt; i < startInt + numFrames; i++) {
             imageFrames.add(pathStart + i + pathEnd);

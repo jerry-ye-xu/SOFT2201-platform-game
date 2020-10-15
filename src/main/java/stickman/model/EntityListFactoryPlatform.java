@@ -6,7 +6,7 @@ import java.lang.UnsupportedOperationException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityFactoryPlatformImpl implements EntityFactoryPlatform {
+public class EntityListFactoryPlatform implements EntityListFactory {
 
     @Override
     public List<Entity> createPlatform(String platformType, JSONObject platformProperties) {

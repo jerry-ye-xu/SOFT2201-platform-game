@@ -67,16 +67,6 @@ public class EntityViewBlob implements EntityView {
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
         this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
-
-        System.out.println("BLOB2: this.xPosition - " + this.xPosition);
-        System.out.println("BLOB2: this.yPosition - " + this.yPosition);
-        System.out.println("BLOB2: this.startingXPos - " + this.startingXPos);
-        System.out.println("BLOB2: this.movementRange - " + this.movementRange);
-        System.out.println("BLOB2: this.movingRight - " + this.movingRight);
-        System.out.println("BLOB2: this.movingLeft - " + this.movingLeft);
-        System.out.println("BLOB2: this.height - " + this.height);
-        System.out.println("BLOB2: this.width - " + this.width);
-
     }
 
     @Override

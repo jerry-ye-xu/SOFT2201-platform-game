@@ -86,5 +86,106 @@
         "movementRange": 50
       }
     ]
+  },
+  "levelTwo": {
+    "height": 400,
+    "width": 1960,
+    "floorHeight": 350,
+    "flagPosition": {
+      "height": 40,
+      "width": 40,
+      "XPos": 1880,
+      "YPos": 350,
+      "imageName": "/flag.png"
+    },
+    "platformList": [
+      {
+        "type": "stationary",
+        "startWidth": 150,
+        "endWidth": 400,
+        "height": 250,
+        "imageName": "/foot_tile.png"
+      },
+      {
+        "type": "stationary",
+        "startWidth": 350,
+        "endWidth": 700,
+        "height": 200,
+        "imageName": "/foot_tile.png"
+      },
+      {
+        "type": "stationary",
+        "startWidth": 800,
+        "endWidth": 1050,
+        "height": 150,
+        "imageName": "/foot_tile.png"
+      },
+      {
+        "type": "stationary",
+        "startWidth": 1050,
+        "endWidth": 1300,
+        "height": 225,
+        "imageName": "/foot_tile.png"
+      },
+      {
+        "type": "stationary",
+        "startWidth": 1350,
+        "endWidth": 1750,
+        "height": 145,
+        "imageName": "/foot_tile.png"
+      }
+    ],
+    "powerUpList":[
+      {
+        "type": "mushroom",
+        "width": 30,
+        "height": 30,
+        "XPos": 1150,
+        "YPos": 225,
+        "imageName": "/mushroom.png"
+      }
+    ],
+    "enemyList": [
+      {
+        "type": "blob",
+        "colour": "green",
+        "startDirection": "right",
+        "jumpHeight": 0,
+        "attack": "none",
+        "XPos": 575,
+        "YPos": 360,
+        "movementRange": 60
+      },
+      {
+        "type": "blob",
+        "colour": "green",
+        "startDirection": "left",
+        "jumpHeight": 0,
+        "attack": "none",
+        "XPos": 600,
+        "YPos": 210,
+        "movementRange": 100
+      },
+      {
+        "type": "blob",
+        "colour": "blue",
+        "startDirection": "right",
+        "jumpHeight": 0,
+        "attack": "none",
+        "XPos": 1250,
+        "YPos": 235,
+        "movementRange": 50
+      },
+      {
+        "type": "blob",
+        "colour": "purple",
+        "startDirection": "left",
+        "jumpHeight": 0,
+        "attack": "none",
+        "XPos": 1550,
+        "YPos": 360,
+        "movementRange": 50
+      }
+    ]
   }
 }

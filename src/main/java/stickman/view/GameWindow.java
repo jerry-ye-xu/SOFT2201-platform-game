@@ -8,10 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import stickman.model.Entity;
-import stickman.model.EntityImplBlob;
-import stickman.model.EntityImplMushroom;
-import stickman.view.EntityViewFireball;
 import stickman.model.GameEngine;
+import stickman.model.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,6 @@ public class GameWindow {
     private Scene scene;
     private Pane pane;
     private GameEngine model;
-    private ImageView previousStickmanFrame;
     private List<EntityView> entityViews;
     private BackgroundDrawer backgroundDrawer;
 
@@ -53,16 +50,24 @@ public class GameWindow {
 
         this.backgroundDrawer = new BlockedBackground();
         this.backgroundDrawer.draw(model, this.pane);
-        this.pane.getChildren().add(this.model.getEntityViewStickman().getNode());
 
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            System.out.println("blob: " + blob);
+        EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+        List<EntityViewBlob> blobView = this.model.getCurrentLevel().getEntityViewBlobList();
+
+        this.pane.getChildren().add(stickmanView.getNode());
+
+        for (EntityViewBlob blob: blobView) {
             this.pane.getChildren().add(blob.getNode());
         }
-        int numLives = this.model.getEntityViewStickman().getNumLives();
-        int score = this.model.getEntityViewStickman().getScore();
-        this.gameStats = new SceneStats(numLives, score);
-        this.pane.getChildren().addAll(gameStats.getlivesLabel(), gameStats.getScoreLabel());
+
+        this.gameStats = new SceneStats(
+            stickmanView.getNumLives(),
+            stickmanView.getScore()
+        );
+        this.pane.getChildren().addAll(
+                gameStats.getlivesLabel(),
+                gameStats.getScoreLabel()
+        );
     }
 
     public Scene getScene() {
@@ -79,24 +84,29 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
-        this.gameStats.updateStats(this.model.getEntityViewStickman());
-        this.refreshStickmanFrame(this.model, xViewportOffset);
+
+        EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+        List<EntityViewBlob> blobViewList =  this.model.getCurrentLevel().getEntityViewBlobList();
+        List<EntityViewFireball> fireballViewList = this.model.getCurrentLevel().getEntityViewFireballList();
+
+        stickmanView.update(xViewportOffset);
+        this.gameStats.updateStats(stickmanView);
 
         /*
             Handling Blob Collision
          */
 
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
+        for (EntityViewBlob blob: blobViewList) {
             blob.update(xViewportOffset);
         }
 
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
-            ImageView blobView = (ImageView) blob.getNode();
-            if (stickmanView.intersects(blobView.getLayoutBounds())) {
-                this.model.getEntityViewStickman().decreaseLive();
-                this.model.getEntityViewStickman().setMushroomPowerUp(false);
-                this.model.getEntityViewStickman().resetPosition();
+        for (EntityViewBlob blob: blobViewList) {
+            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+            ImageView blobImage = (ImageView) blob.getNode();
+            if (stickmanImage.intersects(blobImage.getLayoutBounds())) {
+                stickmanView.decreaseLive();
+                stickmanView.setMushroomPowerUp(false);
+                stickmanView.resetPosition();
             }
         }
 
@@ -104,7 +114,7 @@ public class GameWindow {
             Handling Fireball mechanism
          */
 
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
+        for (EntityViewFireball fireball: fireballViewList) {
             fireball.update(xViewportOffset);
 
             if (!pane.getChildren().contains(fireball.getNode())) {
@@ -112,10 +122,10 @@ public class GameWindow {
             }
 
             ImageView fireballView = (ImageView) fireball.getNode();
-            for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
+            for (EntityViewBlob blob: blobViewList) {
                 ImageView blobView = (ImageView) blob.getNode();
                 if (fireballView.intersects(blobView.getLayoutBounds())) {
-                    this.model.getEntityViewStickman().increaseScore(50);
+                    stickmanView.increaseScore(50);
 
                     blob.markForDelete();
                     fireball.markForDelete();
@@ -137,18 +147,8 @@ public class GameWindow {
 
         }
 
-        this.model.getCurrentLevel().getEntityViewFireballList().removeIf(EntityView::isMarkedForDelete);
-        this.model.getEntityViewBlobList().removeIf(EntityView::isMarkedForDelete);
-
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
-            ImageView blobView = (ImageView) blob.getNode();
-            if (stickmanView.intersects(blobView.getLayoutBounds())) {
-                this.model.getEntityViewStickman().decreaseLive();
-                this.model.getEntityViewStickman().setMushroomPowerUp(false);
-                this.model.getEntityViewStickman().resetPosition();
-            }
-        }
+        fireballViewList.removeIf(EntityView::isMarkedForDelete);
+        blobViewList.removeIf(EntityView::isMarkedForDelete);
 
         /*
             Handling Tile/Platform Collision
@@ -156,25 +156,25 @@ public class GameWindow {
 
         onPlatformTiles = 0;
         for (EntityView entityView: entityViews) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
+            ImageView stickmanImage = (ImageView) stickmanView.getNode();
             ImageView entityImage = (ImageView) entityView.getNode();
             if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("tile")
             ) {
-                if ((stickmanView.getY() < entityImage.getY())
+                if ((stickmanImage.getY() < entityImage.getY())
                 ) {
                     onPlatformTiles += 1;
                     break;
                 } else {
-                    this.model.getEntityViewStickman().setYspeed(0);
+                    stickmanView.setYspeed(0);
                 }
             }
         }
         if (onPlatformTiles > 0)  {
-            this.model.getEntityViewStickman().setOnPlatform(true);
+            stickmanView.setOnPlatform(true);
         } else {
-            this.model.getEntityViewStickman().setOnPlatform(false);
+            stickmanView.setOnPlatform(false);
         }
 
         /*
@@ -188,28 +188,28 @@ public class GameWindow {
         }
 
         for (EntityView entityView: entityViews) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
+            ImageView stickmanImage = (ImageView) stickmanView.getNode();
             ImageView entityImage = (ImageView) entityView.getNode();
             if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("flag")
             ) {
-                System.out.println("Intersects an flag");
-                this.model.getEntityViewStickman().setWinStatus(true);
+//                System.out.println("Intersects an flag");
+                stickmanView.setWinStatus(true);
             }
 
             if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("mushroom")
             ) {
-                System.out.println("Intersects an mushroom");
-                this.model.getCurrentLevel().getEntities().remove(entityView.getEntity());
-                this.model.getEntityViewStickman().increaseScore(100);
-                this.model.getEntityViewStickman().setMushroomPowerUp(true);
+//                System.out.println("Intersects an mushroom");
+                entities.remove(entityView.getEntity());
+                stickmanView.increaseScore(100);
+                stickmanView.setMushroomPowerUp(true);
             }
         }
 
-        double heroXPos = model.getEntityViewStickman().getXPosition();
+        double heroXPos = stickmanView.getXPosition();
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
@@ -222,7 +222,7 @@ public class GameWindow {
         } else if (heroXPos > width - VIEWPORT_MARGIN) {
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
 
-            double stickmanWidth = this.model.getEntityViewStickman().getWidth();
+            double stickmanWidth = stickmanView.getWidth();
 
             if (xViewportOffset >= this.model.getCurrentLevel().getWidth() - width + stickmanWidth) {
                 xViewportOffset = this.model.getCurrentLevel().getWidth() - width + stickmanWidth;
@@ -259,57 +259,17 @@ public class GameWindow {
             Game ending conditions.
          */
 
-        if (this.model.getEntityViewStickman().getNumLives() == 0) {
+        if (stickmanView.getNumLives() == 0) {
             SceneGameResult deathScene = new SceneGameResult(this.width, this.height, "You lose! =(");
             this.pane.getChildren().removeAll();
             this.pane.getChildren().addAll(deathScene.getScreen(), deathScene.getScreenLabel());
         }
 
-        if (this.model.getEntityViewStickman().getWinStatus()) {
+        if (stickmanView.getWinStatus()) {
             SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
             this.pane.getChildren().removeAll();
             this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
         }
 
     }
-
-    private void refreshStickmanFrame(GameEngine model, double xViewportOffset) {
-        EntityViewStickman stickman = model.getEntityViewStickman();
-        stickman.update(xViewportOffset);
-//        EntityViewStickman stickman = model.getEntityViewStickman();
-//        this.pane.getChildren().remove(this.previousStickmanFrame);
-//        this.previousStickmanFrame = stickman.update(xViewportOffset);
-//        this.pane.getChildren().add(this.previousStickmanFrame);
-    }
-
-    private boolean hasCollided(EntityViewStickman stickman, EntityView entityView) {
-        double entityViewHeight = entityView.getNode().getBoundsInParent().getHeight();
-        double entityViewWidth = entityView.getNode().getBoundsInParent().getWidth();
-        double entityViewXPos = entityView.getNode().getLayoutX();
-        double entityViewYPos = entityView.getNode().getLayoutY();
-
-        double stickmanXPos = stickman.getXPosition();
-        double stickmanYPos = stickman.getYPosition();
-        double stickmanWidth = stickman.getWidth();
-        double stickmanHeight = stickman.getHeight();
-
-        return (
-            (stickmanXPos < (entityViewXPos + entityViewWidth)) &&
-            ((stickmanXPos + stickmanWidth) > entityViewXPos) &&
-            (stickmanYPos < (entityViewYPos + entityViewHeight)) &&
-            ((stickmanYPos + stickmanHeight) > entityViewYPos)
-        );
-    }
-
-    private void updateGameScore() {
-
-    }
-
-//    private void addStationaryEntities(GameEngine model, Pane pane) {
-//        List<Platform> platformList = model.getCurrentLevel().getPlatforms();
-//
-//        for (Platform platform: platformList) {
-//            pane.getChildren().add(platform.getHBox());
-//        }
-//    }
 }

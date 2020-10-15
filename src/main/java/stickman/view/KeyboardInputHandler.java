@@ -38,7 +38,6 @@ class KeyboardInputHandler{
         pressedKeys.add(keyEvent.getCode());
 
         if (keyEvent.getCode().equals(KeyCode.SPACE)) {
-            System.out.println("Pressed space.");
             model.fire();
         }
 
