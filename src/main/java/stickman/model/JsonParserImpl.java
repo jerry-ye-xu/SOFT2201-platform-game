@@ -23,7 +23,7 @@ public class JsonParserImpl implements JsonParser {
     @Override
     public Level buildLevel() {
         double stickmanStartingXPos = (double) this.jsonDict.get("stickmanStartingPos");
-        JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
+        JSONObject levelDict = (JSONObject) this.jsonDict.get(this.levelName);
 
         JSONArray platformArrayJSON = parseJsonArray(levelDict, "platformList");
         JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
@@ -37,11 +37,14 @@ public class JsonParserImpl implements JsonParser {
 
         Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
 
+        Entity stickman = this.buildStickman(this.levelName);
+
         List<Entity> entityList = new ArrayList<>();
         entityList.addAll(platformList);
         entityList.addAll(powerUpList);
         entityList.addAll(enemyList);
         entityList.add(flag);
+        entityList.add(stickman);
 
 //        System.out.println("entityList.size()");
 //        System.out.println(entityListStationary.size());
@@ -49,8 +52,6 @@ public class JsonParserImpl implements JsonParser {
         double height = ((Long) levelDict.get("height")).doubleValue();
         double width = ((Long) levelDict.get("width")).doubleValue();
         double floorHeight = ((Long) levelDict.get("floorHeight")).doubleValue();
-
-        Entity stickmanEntity = this.buildStickman(levelName);
 
         Level gameLevel = new LevelImpl(
                 entityList,
@@ -151,7 +152,7 @@ public class JsonParserImpl implements JsonParser {
 //        System.out.println("startingYPos: " + startingYPos);
 //        System.out.println("height: " + height);
 
-        Entity stickmanEntity = new EntityImplStickman(
+        Entity stickman = new EntityImplStickman(
                 "stickman",
                 width,
                 height,
@@ -161,7 +162,7 @@ public class JsonParserImpl implements JsonParser {
                 layer
         );
 
-        return stickmanEntity;
+        return stickman;
     }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {

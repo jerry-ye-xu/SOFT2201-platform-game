@@ -12,27 +12,12 @@ import java.util.List;
 public class EntityViewBlob extends EntityViewImplMoving {
     protected static final double DEFAULT_SPEED = 0.75;
 
-    private final Layer layer;
-    private double width;
-    private double height;
     private final double xSpeed;
-    private double ySpeed;
-    private double xPosition;
-    private double yPosition;
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
-    private boolean canJump;
-
-    private Entity entity;
-    private String imagePath;
-    private boolean delete = false;
-    private ImageView node;
 
     private List<String> standingFrames;
     private int numStandingFrames;
     private char[] tagList = {'a', 'b'};
     private double movementRange;
-    private final double startingXPos;
 
     private final int frameCountRate = 90;
     private int frameCount = 0;
@@ -40,34 +25,22 @@ public class EntityViewBlob extends EntityViewImplMoving {
 
     public EntityViewBlob(Entity entity) {
         super(entity);
-        this.entity = entity;
-        this.imagePath = entity.getImagePath();
-
-        this.layer = this.entity.getLayer();
-
-        this.width = this.entity.getWidth();
-        this.height = this.entity.getHeight();
 
         this.xSpeed = DEFAULT_SPEED;
-//        this.ySpeed = 0;
-//
-        this.startingXPos = this.entity.getXPos();
-        this.xPosition = this.entity.getXPos();
-        this.yPosition = this.entity.getYPos();
 
-        EntityMoving entityEnemy = (EntityMoving) this.entity;
+        EntityMoving entityEnemy = (EntityMoving) entity;
         this.setMovementRange(entityEnemy);
         this.setInitialDirection(entityEnemy);
 
         this.numStandingFrames = this.tagList.length;
-        String pathStart = ((EntityImplBlob) this.entity).getImagePathStart();
-        String pathEnd = ((EntityImplBlob) this.entity).getImagePathEnd();
+        String pathStart = ((EntityImplBlob) entity).getImagePathStart();
+        String pathEnd = ((EntityImplBlob) entity).getImagePathEnd();
         this.loadEntityFrames(pathStart, pathEnd, this.tagList);
 
-        this.imagePath = this.entity.getImagePath();
-        URL imageURL = this.getClass().getResource(this.imagePath);
-        this.node = new ImageView(imageURL.toExternalForm());
-        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
+//        this.imagePath = entity.getImagePath();
+//        URL imageURL = this.getClass().getResource(this.imagePath);
+//        this.node = new ImageView(imageURL.toExternalForm());
+//        this.node.setViewOrder(getViewOrder(entity.getLayer()));
     }
 
     @Override
@@ -78,11 +51,6 @@ public class EntityViewBlob extends EntityViewImplMoving {
             this.imagePath = imagePath;
             this.node.setImage(new Image(this.imagePath));
         }
-
-
-
-        this.updateYPos();
-        this.updateXPos();
 
         this.node.setX(this.xPosition - xViewportOffset);
         this.node.setY(this.yPosition);
@@ -125,6 +93,7 @@ public class EntityViewBlob extends EntityViewImplMoving {
     }
 
     public void updateXPos() {
+//        System.out.println("EntityViewBlob.updateXPos()");
         if (this.xPosition < this.startingXPos - this.movementRange) {
             this.xPosition = this.startingXPos - this.movementRange;
             this.setMovement(false, true);
@@ -139,6 +108,8 @@ public class EntityViewBlob extends EntityViewImplMoving {
         } else if (this.movingLeft) {
             this.xPosition -= this.xSpeed * DEFAULT_SPEED;
         }
+
+//        System.out.println("this.xPosition: " + this.xPosition);
     }
 
     public void updateYPos() { }

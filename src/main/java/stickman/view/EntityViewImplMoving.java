@@ -14,37 +14,34 @@ public class EntityViewImplMoving extends EntityViewImpl {
     protected static final double DROP_ACCEL = 0.40;
     protected final int frameCountRate = 45;
 
-    private final Layer layer;
-    private double width;
-    private double height;
-    private final double xSpeed;
-    private double ySpeed;
-    private double xPosition;
-    private double yPosition;
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
-    private boolean canJump;
+    protected final Layer layer;
+    protected double width;
+    protected double height;
+    protected double xSpeed;
+    protected double ySpeed;
+    protected double xPosition;
+    protected double yPosition;
+    protected boolean movingLeft = false;
+    protected boolean movingRight = false;
+    protected boolean canJump;
+    protected final double startingXPos;
 
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
-
-    private int frameCount = 0;
-    private int frameIdx = 0;
+    protected int frameCount = 0;
+    protected int frameIdx = 0;
 
     public EntityViewImplMoving(Entity entity) {
         super(entity);
-        this.entity = entity;
 //        System.out.println("Inside EntityViewImplMoving");
 //        System.out.println("this.entity: " + this.entity);
         this.layer = this.entity.getLayer();
 
         this.width = this.entity.getWidth();
         this.height = this.entity.getHeight();
-
+//
         this.xPosition = this.entity.getXPos();
         this.yPosition = this.entity.getYPos();
+
+        this.startingXPos = this.entity.getXPos();
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;

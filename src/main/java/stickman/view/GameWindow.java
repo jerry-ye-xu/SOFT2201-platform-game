@@ -51,25 +51,26 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
         this.backgroundDrawer.draw(model, this.pane);
 
-        this.model.getCurrentLevel().addEntityViewToPane(this.pane);
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
 
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+//        this.pane.getChildren().add(stickmanView.getNode());
 //        List<EntityViewBlob> blobView = this.model.getCurrentLevel().getEntityViewBlobList();
 
 //        this.pane.getChildren().add(stickmanView.getNode());
 
-//        for (EntityViewBlob blob: blobView) {
+//        for (EntityViewImplMoving blob: this.model.getCurrentLevel().getEntityViewsMovingList()) {
 //            this.pane.getChildren().add(blob.getNode());
 //        }
 
-//        this.gameStats = new SceneStats(
-//            stickmanView.getNumLives(),
-//            stickmanView.getScore()
-//        );
-//        this.pane.getChildren().addAll(
-//                gameStats.getlivesLabel(),
-//                gameStats.getScoreLabel()
-//        );
+        this.gameStats = new SceneStats(
+            stickmanView.getNumLives(),
+            stickmanView.getScore()
+        );
+        this.pane.getChildren().addAll(
+                gameStats.getlivesLabel(),
+                gameStats.getScoreLabel()
+        );
     }
 
     public Scene getScene() {
@@ -86,13 +87,17 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
-
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+        List<EntityViewImplMoving> movingViews = this.model.getCurrentLevel().getEntityViewsMovingList();
+
+        for (EntityViewImplMoving movingView: movingViews) {
+            movingView.update(xViewportOffset);
+        }
 //        List<EntityViewBlob> blobViewList =  this.model.getCurrentLevel().getEntityViewBlobList();
 //        List<EntityViewFireball> fireballViewList = this.model.getCurrentLevel().getEntityViewFireballList();
 
-//        stickmanView.update(xViewportOffset);
-//        this.gameStats.updateStats(stickmanView);
+        stickmanView.update(xViewportOffset);
+        this.gameStats.updateStats(stickmanView);
 
         /*
             Handling Blob Collision
@@ -189,47 +194,47 @@ public class GameWindow {
             entityView.markForDelete();
         }
 
-//        for (EntityView entityView: entityViews) {
-//            ImageView stickmanImage = (ImageView) stickmanView.getNode();
-//            ImageView entityImage = (ImageView) entityView.getNode();
-//            if (
-//                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
-//                entityView.getEntity().getType().equals("flag")
-//            ) {
-////                System.out.println("Intersects an flag");
-//                stickmanView.setWinStatus(true);
-//            }
-//
-//            if (
-//                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
-//                entityView.getEntity().getType().equals("mushroom")
-//            ) {
-////                System.out.println("Intersects an mushroom");
-//                entities.remove(entityView.getEntity());
-//                stickmanView.increaseScore(100);
-//                stickmanView.setMushroomPowerUp(true);
-//            }
-//        }
+        for (EntityView entityView: entityViews) {
+            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+            ImageView entityImage = (ImageView) entityView.getNode();
+            if (
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
+                entityView.getEntity().getType().equals("flag")
+            ) {
+//                System.out.println("Intersects an flag");
+                stickmanView.setWinStatus(true);
+            }
 
-//        double heroXPos = stickmanView.getXPosition();
-//        heroXPos -= xViewportOffset;
-//
-//        if (heroXPos < VIEWPORT_MARGIN) {
-//            if (xViewportOffset >= 0) { // Don't go further left than the start of the level
-//                xViewportOffset -= VIEWPORT_MARGIN - heroXPos;
-//                if (xViewportOffset < 0) {
-//                    xViewportOffset = 0;
-//                }
-//            }
-//        } else if (heroXPos > width - VIEWPORT_MARGIN) {
-//            xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
-//
-//            double stickmanWidth = stickmanView.getWidth();
-//
-//            if (xViewportOffset >= this.model.getCurrentLevel().getWidth() - width + stickmanWidth) {
-//                xViewportOffset = this.model.getCurrentLevel().getWidth() - width + stickmanWidth;
-//            }
-//        }
+            if (
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
+                entityView.getEntity().getType().equals("mushroom")
+            ) {
+//                System.out.println("Intersects an mushroom");
+                entities.remove(entityView.getEntity());
+                stickmanView.increaseScore(100);
+                stickmanView.setMushroomPowerUp(true);
+            }
+        }
+
+        double heroXPos = stickmanView.getXPosition();
+        heroXPos -= xViewportOffset;
+
+        if (heroXPos < VIEWPORT_MARGIN) {
+            if (xViewportOffset >= 0) { // Don't go further left than the start of the level
+                xViewportOffset -= VIEWPORT_MARGIN - heroXPos;
+                if (xViewportOffset < 0) {
+                    xViewportOffset = 0;
+                }
+            }
+        } else if (heroXPos > width - VIEWPORT_MARGIN) {
+            xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
+
+            double stickmanWidth = stickmanView.getWidth();
+
+            if (xViewportOffset >= this.model.getCurrentLevel().getWidth() - width + stickmanWidth) {
+                xViewportOffset = this.model.getCurrentLevel().getWidth() - width + stickmanWidth;
+            }
+        }
 
         for (Entity entity: entities) {
             boolean notFound = true;

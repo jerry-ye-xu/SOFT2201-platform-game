@@ -10,7 +10,6 @@ public class EntityImplBlob extends EntityImpl implements EntityMoving {
     protected String imagePathEnd;
 
     protected double startingXPos;
-//    protected double
     protected boolean movingLeft;
     protected boolean movingRight;
 

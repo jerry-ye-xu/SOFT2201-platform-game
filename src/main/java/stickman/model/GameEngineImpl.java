@@ -1,19 +1,9 @@
 package stickman.model;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import stickman.view.EntityViewBlob;
-import stickman.view.EntityViewFireball;
+import stickman.view.EntityViewImplMoving;
 import stickman.view.EntityViewStickman;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
 import java.util.List;
-import java.util.ArrayList;
 
 public class GameEngineImpl implements GameEngine {
     private Level gameLevel;
@@ -74,18 +64,19 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public void tick() {
+        this.gameLevel.tick();
 
 //        EntityViewStickman stickman = this.getCurrentLevel().getEntityViewStickman();
 //        stickman.updateXPos(this.gameLevel);
 //        stickman.updateYPos(this.gameLevel);
 //
-        Level level = this.getCurrentLevel();
-        for (Entity entity: level.getEntities()) {
-            if (entity.getType().equals("blob")) {
-                entity.updateXPos();
-                entity.updateYPos();
-            }
-        }
+//        Level level = this.getCurrentLevel();
+//        for (Entity entity: level.getEntities()) {
+//            if (entity.getType().equals("blob")) {
+//                entity.updateXPos();
+//                entity.updateYPos();
+//            }
+//        }
 //
 //        for (EntityViewFireball fireball: level.getEntityViewFireballList()) {
 //            fireball.updateXPos();

@@ -15,8 +15,4 @@ public class EntityImplFlag extends EntityImpl {
     ) {
         super(type, width, height, XPos, YPos, imagePath, layer);
     }
-
-    public void winStatusStickman(EntityViewStickman entityViewStickman) {
-        entityViewStickman.setWinStatus(true);
-    }
 }

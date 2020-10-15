@@ -10,12 +10,12 @@ import javafx.scene.image.ImageView;
 import java.net.URL;
 
 public class EntityViewImpl implements EntityView {
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
-    private double xPosition;
-    private double yPosition;
+    protected Entity entity;
+    protected boolean delete = false;
+    protected ImageView node;
+    protected String imagePath;
+    protected double xPosition;
+    protected double yPosition;
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
@@ -28,8 +28,18 @@ public class EntityViewImpl implements EntityView {
 
         this.xPosition = entity.getXPos();
         this.yPosition = entity.getYPos();
-        this.node.setX(entity.getXPos());
-        this.node.setY(entity.getXPos());
+
+//        System.out.println("entity.getXPos() " + entity.getXPos());
+//        System.out.println("entity.getYPos() " + entity.getYPos());
+
+        this.node.setX(this.entity.getXPos());
+        this.node.setY(this.entity.getYPos());
+
+//        System.out.println("this.node.getLayoutX() " + this.node.getLayoutX());
+//        System.out.println("this.node.getLayoutY() " + this.node.getLayoutY());
+//        System.out.println("this.node.getX() " + this.node.getX());
+//        System.out.println("this.node.getY() " + this.node.getY());
+
         this.node.setFitHeight(entity.getHeight());
         this.node.setFitWidth(entity.getWidth());
         this.node.setPreserveRatio(true);
@@ -63,10 +73,8 @@ public class EntityViewImpl implements EntityView {
         delete = false;
     }
 
-    @Override
     public void updateXPos() { }
 
-    @Override
     public void updateYPos() { }
 
     @Override

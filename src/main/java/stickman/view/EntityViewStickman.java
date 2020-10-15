@@ -18,27 +18,17 @@ public class EntityViewStickman extends EntityViewImplMoving {
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
 
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
-
-    private final Layer layer;
-    private double width;
-    private double height;
     private final double xSpeed;
-    private double ySpeed;
-    private double xPosition;
-    private double yPosition;
     private double yOffset = 0;
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
-    private boolean facingL = false;
-    private boolean facingR = true;
-    private boolean canJump = true;
-    private boolean onPlatform = false;
+
     private final double startingXPos;
     private final double startingYPos;
+
+    private boolean facingL = false;
+    private boolean facingR = true;
+
+    private boolean canJump = true;
+    private boolean onPlatform = false;
 
     private int numLives = 3;
     private int score = 0;
@@ -61,29 +51,15 @@ public class EntityViewStickman extends EntityViewImplMoving {
     private final int numFramesStillLeft = 3;
 
     private final int frameCountRate = 30;
-    private int frameCount = 0;
-    private int frameIdx = 0;
 
     public EntityViewStickman(Entity entity) {
         super(entity);
-        this.entity = entity;
-        this.layer = this.entity.getLayer();
-
-        this.width = this.entity.getWidth();
-        this.height = this.entity.getHeight();
-
-        this.xPosition = this.entity.getXPos();
-        this.yPosition = this.entity.getYPos() - this.entity.getHeight();
-        this.startingXPos = this.entity.getXPos();
-        this.startingYPos = this.entity.getYPos();
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;
 
-        this.imagePath = this.entity.getImagePath();
-        URL imageURL = this.getClass().getResource(this.imagePath);
-        this.node = new ImageView(imageURL.toExternalForm());
-        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
+        this.startingXPos = this.entity.getXPos();
+        this.startingYPos = this.entity.getYPos();
 
         this.loadEntityFrames();
     }
@@ -124,7 +100,7 @@ public class EntityViewStickman extends EntityViewImplMoving {
                 ".png"
             );
 
-//            level.getEntityViewFireballList().add(new EntityViewFireball(fireBallEntity));
+            level.getEntityViewsMovingList().add(new EntityViewFireball(fireBallEntity));
         }
         return false;
     }
@@ -135,6 +111,7 @@ public class EntityViewStickman extends EntityViewImplMoving {
     }
 
     public void updateXPos(Level level) {
+        System.out.println("EntityViewStickman.updateXPos()");
         if (this.movingRight) {
             this.xPosition += this.xSpeed * DEFAULT_SPEED;
             this.facingL = false;

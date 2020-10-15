@@ -1,5 +1,8 @@
 package stickman;
 
+import stickman.model.Class1;
+import stickman.model.Class2;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -30,9 +33,13 @@ public class App extends Application {
 
 //        String levelName = params.get("levelName");
 //        String configPath = params.get("configPath");
-
+//        Class1 c1 = new Class1();
+//        System.out.println(c1.getX());
+//
+//        Class1 c2 = new Class2();
+//        System.out.println(c2.getX());
         String configPath = "config.json";
-        String levelName = "levelTwo";
+        String levelName = "levelOne";
         int width = 640;
         int height = 400;
 
@@ -49,14 +56,6 @@ public class App extends Application {
         primaryStage.show();
 
         window.run();
-//
-//        SceneGameResult endingScene = new SceneGameResult(width, height);
-//        endingScene.setSceneMessage("You Lose! =(");
-//        endingScene.drawScene();
-
-//        if (model.getEntityViewStickman().getNumLives() == 0) {
-//            primaryStage.setScene(endingScene.getScene());
-//        }
     }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {
