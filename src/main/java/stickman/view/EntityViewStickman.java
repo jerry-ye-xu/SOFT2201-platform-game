@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewStickman extends EntityViewImplMoving {
-    protected static final double DEFAULT_SPEED = 2;
+    protected static final double DEFAULT_SPEED = 2.75;
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
 
@@ -111,13 +111,12 @@ public class EntityViewStickman extends EntityViewImplMoving {
     }
 
     public void updateXPos(Level level) {
-        System.out.println("EntityViewStickman.updateXPos()");
         if (this.movingRight) {
-            this.xPosition += this.xSpeed * DEFAULT_SPEED;
+            this.xPosition += this.xSpeed;
             this.facingL = false;
             this.facingR = true;
         } else if (this.movingLeft) {
-            this.xPosition -= this.xSpeed * DEFAULT_SPEED;
+            this.xPosition -= this.xSpeed;
             this.facingL = true;
             this.facingR = false;
         }
@@ -274,8 +273,6 @@ public class EntityViewStickman extends EntityViewImplMoving {
                 if (doUpdateFrame()) {
                     this.frameIdx = (this.frameIdx + 1) % this.numFramesStillRight;
                 }
-//                System.out.println("standingRightFrames: " + standingRightFrames);
-//                System.out.println("frameIdx: " + frameIdx);
                 imagePath = standingRightFrames.get(this.frameIdx);
 
             }
@@ -359,6 +356,7 @@ public class EntityViewStickman extends EntityViewImplMoving {
     public void setXPosition(double xPosition) {
         this.xPosition = xPosition;
     }
+
     public void setYPosition(double yPosition) {
         this.yPosition = yPosition;
     }

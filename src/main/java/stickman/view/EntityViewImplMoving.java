@@ -31,13 +31,11 @@ public class EntityViewImplMoving extends EntityViewImpl {
 
     public EntityViewImplMoving(Entity entity) {
         super(entity);
-//        System.out.println("Inside EntityViewImplMoving");
-//        System.out.println("this.entity: " + this.entity);
         this.layer = this.entity.getLayer();
 
         this.width = this.entity.getWidth();
         this.height = this.entity.getHeight();
-//
+
         this.xPosition = this.entity.getXPos();
         this.yPosition = this.entity.getYPos();
 

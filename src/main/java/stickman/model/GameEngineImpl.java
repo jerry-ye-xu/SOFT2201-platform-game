@@ -65,23 +65,6 @@ public class GameEngineImpl implements GameEngine {
     @Override
     public void tick() {
         this.gameLevel.tick();
-
-//        EntityViewStickman stickman = this.getCurrentLevel().getEntityViewStickman();
-//        stickman.updateXPos(this.gameLevel);
-//        stickman.updateYPos(this.gameLevel);
-//
-//        Level level = this.getCurrentLevel();
-//        for (Entity entity: level.getEntities()) {
-//            if (entity.getType().equals("blob")) {
-//                entity.updateXPos();
-//                entity.updateYPos();
-//            }
-//        }
-//
-//        for (EntityViewFireball fireball: level.getEntityViewFireballList()) {
-//            fireball.updateXPos();
-//            fireball.updateYPos();
-//        }
     }
 
     /*

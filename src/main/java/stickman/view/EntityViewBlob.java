@@ -36,11 +36,6 @@ public class EntityViewBlob extends EntityViewImplMoving {
         String pathStart = ((EntityImplBlob) entity).getImagePathStart();
         String pathEnd = ((EntityImplBlob) entity).getImagePathEnd();
         this.loadEntityFrames(pathStart, pathEnd, this.tagList);
-
-//        this.imagePath = entity.getImagePath();
-//        URL imageURL = this.getClass().getResource(this.imagePath);
-//        this.node = new ImageView(imageURL.toExternalForm());
-//        this.node.setViewOrder(getViewOrder(entity.getLayer()));
     }
 
     @Override
@@ -93,7 +88,6 @@ public class EntityViewBlob extends EntityViewImplMoving {
     }
 
     public void updateXPos() {
-//        System.out.println("EntityViewBlob.updateXPos()");
         if (this.xPosition < this.startingXPos - this.movementRange) {
             this.xPosition = this.startingXPos - this.movementRange;
             this.setMovement(false, true);
@@ -108,8 +102,6 @@ public class EntityViewBlob extends EntityViewImplMoving {
         } else if (this.movingLeft) {
             this.xPosition -= this.xSpeed * DEFAULT_SPEED;
         }
-
-//        System.out.println("this.xPosition: " + this.xPosition);
     }
 
     public void updateYPos() { }

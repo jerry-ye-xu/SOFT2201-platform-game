@@ -10,9 +10,7 @@ import java.util.List;
 
 public interface Level {
     List<Entity> getEntities();
-//    List<EntityViewBlob> getEntityViewBlobList();
-//    List<EntityViewFireball> getEntityViewFireballList();
-//
+
     EntityViewStickman getEntityViewStickman();
 
     public List<EntityViewImplMoving> getEntityViewsMovingList();

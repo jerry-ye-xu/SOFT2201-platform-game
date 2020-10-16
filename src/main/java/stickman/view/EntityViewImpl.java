@@ -19,8 +19,7 @@ public class EntityViewImpl implements EntityView {
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
-//        System.out.println("Inside EntityViewImpl");
-//        System.out.println("this.entity: " + this.entity);
+
         this.imagePath = this.entity.getImagePath();
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
@@ -29,16 +28,8 @@ public class EntityViewImpl implements EntityView {
         this.xPosition = entity.getXPos();
         this.yPosition = entity.getYPos();
 
-//        System.out.println("entity.getXPos() " + entity.getXPos());
-//        System.out.println("entity.getYPos() " + entity.getYPos());
-
         this.node.setX(this.entity.getXPos());
         this.node.setY(this.entity.getYPos());
-
-//        System.out.println("this.node.getLayoutX() " + this.node.getLayoutX());
-//        System.out.println("this.node.getLayoutY() " + this.node.getLayoutY());
-//        System.out.println("this.node.getX() " + this.node.getX());
-//        System.out.println("this.node.getY() " + this.node.getY());
 
         this.node.setFitHeight(entity.getHeight());
         this.node.setFitWidth(entity.getWidth());

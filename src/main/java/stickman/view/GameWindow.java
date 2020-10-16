@@ -7,9 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import stickman.model.Entity;
-import stickman.model.GameEngine;
-import stickman.model.Level;
+import stickman.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +85,30 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
+
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+        List<Entity> entities = this.model.getCurrentLevel().getEntities();
         List<EntityViewImplMoving> movingViews = this.model.getCurrentLevel().getEntityViewsMovingList();
+
+        EntityViewCollision entityViewCollision = new EntityViewCollisionImpl();
+        entityViewCollision.handleCollision(
+            stickmanView,
+            entities,
+            movingViews,
+            entityViews
+
+        );
 
         for (EntityViewImplMoving movingView: movingViews) {
             movingView.update(xViewportOffset);
+
+            if (movingView.isMarkedForDelete()) {
+                pane.getChildren().remove(movingView.getNode());
+            }
         }
-//        List<EntityViewBlob> blobViewList =  this.model.getCurrentLevel().getEntityViewBlobList();
-//        List<EntityViewFireball> fireballViewList = this.model.getCurrentLevel().getEntityViewFireballList();
+
+        movingViews.removeIf(EntityView::isMarkedForDelete);
 
         stickmanView.update(xViewportOffset);
         this.gameStats.updateStats(stickmanView);
@@ -103,10 +117,6 @@ public class GameWindow {
             Handling Blob Collision
          */
 
-//        for (EntityViewBlob blob: blobViewList) {
-//            blob.update(xViewportOffset);
-//        }
-//
 //        for (EntityViewBlob blob: blobViewList) {
 //            ImageView stickmanImage = (ImageView) stickmanView.getNode();
 //            ImageView blobImage = (ImageView) blob.getNode();
@@ -188,8 +198,6 @@ public class GameWindow {
             Handling stationary entities
          */
 
-        List<Entity> entities = this.model.getCurrentLevel().getEntities();
-
         for (EntityView entityView: entityViews) {
             entityView.markForDelete();
         }
@@ -201,7 +209,6 @@ public class GameWindow {
                 stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("flag")
             ) {
-//                System.out.println("Intersects an flag");
                 stickmanView.setWinStatus(true);
             }
 
@@ -209,7 +216,6 @@ public class GameWindow {
                 stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("mushroom")
             ) {
-//                System.out.println("Intersects an mushroom");
                 entities.remove(entityView.getEntity());
                 stickmanView.increaseScore(100);
                 stickmanView.setMushroomPowerUp(true);
@@ -266,17 +272,17 @@ public class GameWindow {
             Game ending conditions.
          */
 
-//        if (stickmanView.getNumLives() == 0) {
-//            SceneGameResult deathScene = new SceneGameResult(this.width, this.height, "You lose! =(");
-//            this.pane.getChildren().removeAll();
-//            this.pane.getChildren().addAll(deathScene.getScreen(), deathScene.getScreenLabel());
-//        }
-//
-//        if (stickmanView.getWinStatus()) {
-//            SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
-//            this.pane.getChildren().removeAll();
-//            this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
-//        }
+        if (stickmanView.getNumLives() == 0) {
+            SceneGameResult deathScene = new SceneGameResult(this.width, this.height, "You lose! =(");
+            this.pane.getChildren().removeAll();
+            this.pane.getChildren().addAll(deathScene.getScreen(), deathScene.getScreenLabel());
+        }
+
+        if (stickmanView.getWinStatus()) {
+            SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
+            this.pane.getChildren().removeAll();
+            this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
+        }
 
     }
 }

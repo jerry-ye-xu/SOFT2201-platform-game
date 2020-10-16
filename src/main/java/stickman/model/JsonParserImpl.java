@@ -29,8 +29,6 @@ public class JsonParserImpl implements JsonParser {
         JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
         JSONArray enemyArrayJSON = parseJsonArray(levelDict, "enemyList");
 
-//        System.out.println("enemyArrayJSON: " + enemyArrayJSON);
-
         List<Entity> platformList = this.buildPlatforms(platformArrayJSON);
         List<Entity> powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
         List<Entity> enemyList = this.buildEnemyEntities(enemyArrayJSON);
@@ -45,9 +43,6 @@ public class JsonParserImpl implements JsonParser {
         entityList.addAll(enemyList);
         entityList.add(flag);
         entityList.add(stickman);
-
-//        System.out.println("entityList.size()");
-//        System.out.println(entityListStationary.size());
 
         double height = ((Long) levelDict.get("height")).doubleValue();
         double width = ((Long) levelDict.get("width")).doubleValue();
@@ -148,9 +143,6 @@ public class JsonParserImpl implements JsonParser {
 
         String imagePath = "/ch_stand1.png";
         final Layer layer = Layer.FOREGROUND;
-
-//        System.out.println("startingYPos: " + startingYPos);
-//        System.out.println("height: " + height);
 
         Entity stickman = new EntityImplStickman(
                 "stickman",
