@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewFireball extends EntityViewImplMoving {
-    protected static final double DEFAULT_SPEED = 2;
+    protected static final double DEFAULT_SPEED = 2.5;
 
     private final double xSpeed;
 

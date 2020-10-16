@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewBlob extends EntityViewImplMoving {
-    protected static final double DEFAULT_SPEED = 0.75;
+    protected static final double DEFAULT_SPEED = 1.25;
 
     private final double xSpeed;
 

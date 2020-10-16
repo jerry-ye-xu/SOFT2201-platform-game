@@ -52,14 +52,6 @@ public class GameWindow {
         this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
 
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
-//        this.pane.getChildren().add(stickmanView.getNode());
-//        List<EntityViewBlob> blobView = this.model.getCurrentLevel().getEntityViewBlobList();
-
-//        this.pane.getChildren().add(stickmanView.getNode());
-
-//        for (EntityViewImplMoving blob: this.model.getCurrentLevel().getEntityViewsMovingList()) {
-//            this.pane.getChildren().add(blob.getNode());
-//        }
 
         this.gameStats = new SceneStats(
             stickmanView.getNumLives(),
@@ -92,13 +84,6 @@ public class GameWindow {
         List<EntityViewImplMoving> movingViews = this.model.getCurrentLevel().getEntityViewsMovingList();
 
         EntityViewCollision entityViewCollision = new EntityViewCollisionImpl();
-        entityViewCollision.handleCollision(
-            stickmanView,
-            entities,
-            movingViews,
-            entityViews
-
-        );
 
         for (EntityViewImplMoving movingView: movingViews) {
             movingView.update(xViewportOffset);
@@ -112,6 +97,18 @@ public class GameWindow {
 
         stickmanView.update(xViewportOffset);
         this.gameStats.updateStats(stickmanView);
+
+        /*
+            Handling Collision
+         */
+
+        entityViewCollision.handleCollision(
+                stickmanView,
+                entities,
+                movingViews,
+                entityViews
+
+        );
 
         /*
             Handling Blob Collision

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewStickman extends EntityViewImplMoving {
-    protected static final double DEFAULT_SPEED = 2.75;
+    protected static final double DEFAULT_SPEED = 6;
     protected static final double DEFAULT_JUMP = 12;
-    protected static final double DROP_ACCEL = 0.40;
+    protected static final double DROP_ACCEL = 0.65;
 
     private final double xSpeed;
     private double yOffset = 0;

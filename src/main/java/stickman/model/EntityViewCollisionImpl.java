@@ -38,7 +38,6 @@ public class EntityViewCollisionImpl implements EntityViewCollision{
         List<EntityViewImplMoving> movingViews,
         List<EntityView> entityViews
     ) {
-        int onPlatformTiles = 0;
         ImageView stickmanImage = (ImageView) stickman.getNode();
 
         /*
@@ -59,7 +58,7 @@ public class EntityViewCollisionImpl implements EntityViewCollision{
         /*
             Stationary Entities
          */
-
+        int onPlatformTiles = 0;
         for (EntityView entityView: entityViews) {
             ImageView entityViewImage = (ImageView) entityView.getNode();
             if (stickmanImage.intersects(entityViewImage.getLayoutBounds())) {

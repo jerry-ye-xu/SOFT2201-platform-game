@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityViewImplMoving extends EntityViewImpl {
-    protected static final double DEFAULT_SPEED = 1;
+    protected static final double DEFAULT_SPEED = 1.5;
     protected static final double DEFAULT_JUMP = 12;
     protected static final double DROP_ACCEL = 0.40;
     protected final int frameCountRate = 45;

@@ -32,7 +32,7 @@ public class App extends Application {
 //        String configPath = params.get("configPath");
 
         String configPath = "config.json";
-        String levelName = "levelOne";
+        String levelName = "levelTwo";
         int width = 640;
         int height = 400;
 
