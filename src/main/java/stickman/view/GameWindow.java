@@ -7,9 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import stickman.model.Entity;
-import stickman.model.GameEngine;
-import stickman.model.Level;
+import stickman.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +49,9 @@ public class GameWindow {
         this.backgroundDrawer = new BlockedBackground();
         this.backgroundDrawer.draw(model, this.pane);
 
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
+
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
-        List<EntityViewBlob> blobView = this.model.getCurrentLevel().getEntityViewBlobList();
-
-        this.pane.getChildren().add(stickmanView.getNode());
-
-        for (EntityViewBlob blob: blobView) {
-            this.pane.getChildren().add(blob.getNode());
-        }
 
         this.gameStats = new SceneStats(
             stickmanView.getNumLives(),
@@ -84,104 +77,123 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
 
         EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
-        List<EntityViewBlob> blobViewList =  this.model.getCurrentLevel().getEntityViewBlobList();
-        List<EntityViewFireball> fireballViewList = this.model.getCurrentLevel().getEntityViewFireballList();
+        List<Entity> entities = this.model.getCurrentLevel().getEntities();
+        List<EntityViewImplMoving> movingViews = this.model.getCurrentLevel().getEntityViewsMovingList();
+
+        EntityViewCollision entityViewCollision = new EntityViewCollisionImpl();
+
+        for (EntityViewImplMoving movingView: movingViews) {
+            movingView.update(xViewportOffset);
+
+            if (movingView.isMarkedForDelete()) {
+                pane.getChildren().remove(movingView.getNode());
+            }
+        }
+
+        movingViews.removeIf(EntityView::isMarkedForDelete);
 
         stickmanView.update(xViewportOffset);
         this.gameStats.updateStats(stickmanView);
 
         /*
+            Handling Collision
+         */
+
+        entityViewCollision.handleCollision(
+                stickmanView,
+                entities,
+                movingViews,
+                entityViews
+
+        );
+
+        /*
             Handling Blob Collision
          */
 
-        for (EntityViewBlob blob: blobViewList) {
-            blob.update(xViewportOffset);
-        }
-
-        for (EntityViewBlob blob: blobViewList) {
-            ImageView stickmanImage = (ImageView) stickmanView.getNode();
-            ImageView blobImage = (ImageView) blob.getNode();
-            if (stickmanImage.intersects(blobImage.getLayoutBounds())) {
-                stickmanView.decreaseLive();
-                stickmanView.setMushroomPowerUp(false);
-                stickmanView.resetPosition();
-            }
-        }
+//        for (EntityViewBlob blob: blobViewList) {
+//            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+//            ImageView blobImage = (ImageView) blob.getNode();
+//            if (stickmanImage.intersects(blobImage.getLayoutBounds())) {
+//                stickmanView.decreaseLive();
+//                stickmanView.setMushroomPowerUp(false);
+//                stickmanView.resetPosition();
+//            }
+//        }
 
         /*
             Handling Fireball mechanism
          */
 
-        for (EntityViewFireball fireball: fireballViewList) {
-            fireball.update(xViewportOffset);
-
-            if (!pane.getChildren().contains(fireball.getNode())) {
-                pane.getChildren().add(fireball.getNode());
-            }
-
-            ImageView fireballView = (ImageView) fireball.getNode();
-            for (EntityViewBlob blob: blobViewList) {
-                ImageView blobView = (ImageView) blob.getNode();
-                if (fireballView.intersects(blobView.getLayoutBounds())) {
-                    stickmanView.increaseScore(50);
-
-                    blob.markForDelete();
-                    fireball.markForDelete();
-                    pane.getChildren().remove(blob.getNode());
-                }
-            }
-
-            // If fireball hits a stationary object remove it.
-            for (EntityView entityView: entityViews) {
-                ImageView entityNode = (ImageView) entityView.getNode();
-                if (fireballView.intersects(entityNode.getLayoutBounds())) {
-                    fireball.markForDelete();
-                }
-            }
-
-            if (fireball.isMarkedForDelete()) {
-                pane.getChildren().remove(fireball.getNode());
-            }
-
-        }
-
-        fireballViewList.removeIf(EntityView::isMarkedForDelete);
-        blobViewList.removeIf(EntityView::isMarkedForDelete);
+//        for (EntityViewFireball fireball: fireballViewList) {
+//            fireball.update(xViewportOffset);
+//
+//            if (!pane.getChildren().contains(fireball.getNode())) {
+//                pane.getChildren().add(fireball.getNode());
+//            }
+//
+//            ImageView fireballView = (ImageView) fireball.getNode();
+//            for (EntityViewBlob blob: blobViewList) {
+//                ImageView blobView = (ImageView) blob.getNode();
+//                if (fireballView.intersects(blobView.getLayoutBounds())) {
+//                    stickmanView.increaseScore(50);
+//
+//                    blob.markForDelete();
+//                    fireball.markForDelete();
+//                    pane.getChildren().remove(blob.getNode());
+//                }
+//            }
+//
+//            // If fireball hits a stationary object remove it.
+//            for (EntityView entityView: entityViews) {
+//                ImageView entityNode = (ImageView) entityView.getNode();
+//                if (fireballView.intersects(entityNode.getLayoutBounds())) {
+//                    fireball.markForDelete();
+//                }
+//            }
+//
+//            if (fireball.isMarkedForDelete()) {
+//                pane.getChildren().remove(fireball.getNode());
+//            }
+//
+//        }
+//
+//        fireballViewList.removeIf(EntityView::isMarkedForDelete);
+//        blobViewList.removeIf(EntityView::isMarkedForDelete);
 
         /*
             Handling Tile/Platform Collision
          */
 
-        onPlatformTiles = 0;
-        for (EntityView entityView: entityViews) {
-            ImageView stickmanImage = (ImageView) stickmanView.getNode();
-            ImageView entityImage = (ImageView) entityView.getNode();
-            if (
-                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
-                entityView.getEntity().getType().equals("tile")
-            ) {
-                if ((stickmanImage.getY() < entityImage.getY())
-                ) {
-                    onPlatformTiles += 1;
-                    break;
-                } else {
-                    stickmanView.setYspeed(0);
-                }
-            }
-        }
-        if (onPlatformTiles > 0)  {
-            stickmanView.setOnPlatform(true);
-        } else {
-            stickmanView.setOnPlatform(false);
-        }
+//        onPlatformTiles = 0;
+//        for (EntityView entityView: entityViews) {
+//            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+//            ImageView entityImage = (ImageView) entityView.getNode();
+//            if (
+//                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
+//                entityView.getEntity().getType().equals("tile")
+//            ) {
+//                if ((stickmanImage.getY() < entityImage.getY())
+//                ) {
+//                    onPlatformTiles += 1;
+//                    break;
+//                } else {
+//                    stickmanView.setYspeed(0);
+//                }
+//            }
+//        }
+//        if (onPlatformTiles > 0)  {
+//            stickmanView.setOnPlatform(true);
+//        } else {
+//            stickmanView.setOnPlatform(false);
+//        }
 
         /*
             Handling stationary entities
          */
-
-        List<Entity> entities = this.model.getCurrentLevel().getEntities();
 
         for (EntityView entityView: entityViews) {
             entityView.markForDelete();
@@ -194,7 +206,6 @@ public class GameWindow {
                 stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("flag")
             ) {
-//                System.out.println("Intersects an flag");
                 stickmanView.setWinStatus(true);
             }
 
@@ -202,7 +213,6 @@ public class GameWindow {
                 stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("mushroom")
             ) {
-//                System.out.println("Intersects an mushroom");
                 entities.remove(entityView.getEntity());
                 stickmanView.increaseScore(100);
                 stickmanView.setMushroomPowerUp(true);

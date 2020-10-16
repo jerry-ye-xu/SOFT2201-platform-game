@@ -23,13 +23,11 @@ public class JsonParserImpl implements JsonParser {
     @Override
     public Level buildLevel() {
         double stickmanStartingXPos = (double) this.jsonDict.get("stickmanStartingPos");
-        JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
+        JSONObject levelDict = (JSONObject) this.jsonDict.get(this.levelName);
 
         JSONArray platformArrayJSON = parseJsonArray(levelDict, "platformList");
         JSONArray powerUpArrayJSON = parseJsonArray(levelDict, "powerUpList");
         JSONArray enemyArrayJSON = parseJsonArray(levelDict, "enemyList");
-
-//        System.out.println("enemyArrayJSON: " + enemyArrayJSON);
 
         List<Entity> platformList = this.buildPlatforms(platformArrayJSON);
         List<Entity> powerUpList = this.buildPowerUpEntities(powerUpArrayJSON);
@@ -37,25 +35,21 @@ public class JsonParserImpl implements JsonParser {
 
         Entity flag = this.buildFlagEntity((JSONObject) levelDict.get("flagPosition"));
 
-        List<Entity> entityListStationary = new ArrayList<>();
-        entityListStationary.addAll(platformList);
-        entityListStationary.addAll(powerUpList);
-//        entityList.addAll(enemyList);
-        entityListStationary.add(flag);
+        Entity stickman = this.buildStickman(this.levelName);
 
-//        System.out.println("entityList.size()");
-//        System.out.println(entityListStationary.size());
+        List<Entity> entityList = new ArrayList<>();
+        entityList.addAll(platformList);
+        entityList.addAll(powerUpList);
+        entityList.addAll(enemyList);
+        entityList.add(flag);
+        entityList.add(stickman);
 
         double height = ((Long) levelDict.get("height")).doubleValue();
         double width = ((Long) levelDict.get("width")).doubleValue();
         double floorHeight = ((Long) levelDict.get("floorHeight")).doubleValue();
 
-        EntityImplStickman stickmanEntity = this.buildStickman(levelName);
-
         Level gameLevel = new LevelImpl(
-                entityListStationary,
-                enemyList,
-                stickmanEntity,
+                entityList,
                 height,
                 width,
                 floorHeight,
@@ -128,7 +122,7 @@ public class JsonParserImpl implements JsonParser {
         return objList;
     }
 
-    private EntityImplStickman buildStickman(String levelName) {
+    private Entity buildStickman(String levelName) {
         JSONObject levelDict = (JSONObject) this.jsonDict.get(levelName);
 
         String size = (String) this.jsonDict.get("stickmanSize");
@@ -150,10 +144,7 @@ public class JsonParserImpl implements JsonParser {
         String imagePath = "/ch_stand1.png";
         final Layer layer = Layer.FOREGROUND;
 
-//        System.out.println("startingYPos: " + startingYPos);
-//        System.out.println("height: " + height);
-
-        EntityImplStickman stickmanEntity = new EntityImplStickman(
+        Entity stickman = new EntityImplStickman(
                 "stickman",
                 width,
                 height,
@@ -163,7 +154,7 @@ public class JsonParserImpl implements JsonParser {
                 layer
         );
 
-        return stickmanEntity;
+        return stickman;
     }
 
     private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {

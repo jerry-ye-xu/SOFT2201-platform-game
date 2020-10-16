@@ -37,51 +37,12 @@ public class App extends Application {
         int height = 400;
 
         GameEngine model = new GameEngineImpl(configPath, levelName);
-//        System.out.println("bob");
         GameWindow window = new GameWindow(model, width, height);
-//        System.out.println("bob");
-        window.run();
-//        System.out.println("bob");
 
         primaryStage.setTitle("EntityViewStickman");
-//        primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setScene(window.getScene());
         primaryStage.show();
 
         window.run();
-//
-//        SceneGameResult endingScene = new SceneGameResult(width, height);
-//        endingScene.setSceneMessage("You Lose! =(");
-//        endingScene.drawScene();
-
-//        if (model.getEntityViewStickman().getNumLives() == 0) {
-//            primaryStage.setScene(endingScene.getScene());
-//        }
-    }
-
-    private JSONArray parseJsonArray(JSONObject jsonDict, String jsonList) {
-        JSONArray itemList = (JSONArray) jsonDict.get(jsonList);
-        return itemList;
-    }
-
-    private JSONObject parseJsonConfig(String configPath) {
-        JSONObject jsonDict = null;
-
-        JSONParser parser = new JSONParser();
-        try (FileReader reader = new FileReader(configPath)) {
-            Object obj = parser.parse(reader);
-            jsonDict = (JSONObject) obj;
-
-            return jsonDict;
-
-        } catch(FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-        } catch (ParseException pe) {
-            pe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        return jsonDict;
     }
 }

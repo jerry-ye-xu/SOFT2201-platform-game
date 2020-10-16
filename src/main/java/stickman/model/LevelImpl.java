@@ -1,25 +1,17 @@
 package stickman.model;
 
 import javafx.scene.image.ImageView;
-import stickman.view.EntityView;
-import stickman.view.EntityViewBlob;
-import stickman.view.EntityViewFireball;
-import stickman.view.EntityViewStickman;
+import javafx.scene.layout.Pane;
+import stickman.view.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LevelImpl implements Level {
-    protected EntityImplStickman stickmanEntity;
     protected EntityViewStickman stickmanView;
 
     protected List<Entity> arrayEntities;
-
-    protected List<Entity> arrayEnemies;
-    protected List<EntityViewBlob> viewBlobs = new ArrayList<>();
-
-    protected List<EntityMoving> arrayFireballs;
-    protected List<EntityViewFireball> viewsFireballs = new ArrayList<>();
+    protected List<EntityViewImplMoving> movingViews = new ArrayList<>();
 
     protected double height;
     protected double width;
@@ -28,26 +20,46 @@ public class LevelImpl implements Level {
 
     public LevelImpl(
         List<Entity> arrayEntities,
-        List<Entity> arrayEnemies,
-        EntityImplStickman stickmanEntity,
         double height,
         double width,
         double floorHeight,
         double heroXPosition
     ) {
         this.arrayEntities = arrayEntities;
-        this.arrayEnemies = arrayEnemies;
-        this.stickmanEntity = stickmanEntity;
-
-        for (Entity enemy: arrayEnemies) {
-            viewBlobs.add(new EntityViewBlob(enemy));
-        }
-        stickmanView = new EntityViewStickman(stickmanEntity);
+        this.createMovingEntityViews();
 
         this.height = height;
         this.width = width;
         this.floorHeight = floorHeight;
         this.heroXPosition = heroXPosition;
+    }
+
+    private void createMovingEntityViews() {
+        // We keep the moving entities separate from the stationary entities in GameWindow.
+        for (Entity entity: this.arrayEntities) {
+            if (entity.getType().equals("blob")) {
+                this.movingViews.add(new EntityViewBlob(entity));
+
+            } else if (entity.getType().equals("stickman")) {
+                this.stickmanView = new EntityViewStickman(entity);
+            }
+        }
+
+        this.arrayEntities.removeIf(entity -> (entity.getType().equals("blob")));
+        this.arrayEntities.removeIf(entity -> (entity.getType().equals("stickman")));
+
+    }
+
+    public void addEntityViewsToPane(Pane pane) {
+        for (EntityViewImplMoving movingView: this.movingViews) {
+            if (!pane.getChildren().contains(movingView.getNode())) {
+                pane.getChildren().add(movingView.getNode());
+            }
+        }
+
+        if (!pane.getChildren().contains(this.stickmanView.getNode())) {
+            pane.getChildren().add(this.stickmanView.getNode());
+        }
     }
 
     @Override
@@ -56,14 +68,8 @@ public class LevelImpl implements Level {
     }
 
     @Override
-    public List<EntityViewBlob> getEntityViewBlobList() { return this.viewBlobs; }
+    public List<EntityViewImplMoving> getEntityViewsMovingList() { return this.movingViews; }
 
-    @Override
-    public List<EntityViewFireball> getEntityViewFireballList() {
-        return this.viewsFireballs;
-    }
-
-    @Override
     public EntityViewStickman getEntityViewStickman() { return this.stickmanView; }
 
     @Override
@@ -76,17 +82,20 @@ public class LevelImpl implements Level {
 
     @Override
     public void tick() {
+        for (EntityViewImplMoving movingView: this.movingViews) {
+            movingView.updateXPos();
+            movingView.updateYPos();
+        }
+
+        this.stickmanView.updateXPos(this);
+        this.stickmanView.updateYPos(this);
     }
 
     @Override
-    public double getFloorHeight() {
-        return this.floorHeight;
-    }
+    public double getFloorHeight() { return this.floorHeight; }
 
     @Override
-    public double getHeroX() {
-        return this.heroXPosition;
-    }
+    public double getHeroX() { return this.heroXPosition; }
 
     @Override
     public void jump() { }
