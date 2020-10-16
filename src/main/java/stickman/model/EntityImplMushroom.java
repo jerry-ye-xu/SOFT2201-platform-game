@@ -15,8 +15,4 @@ public class EntityImplMushroom extends EntityImpl {
     ) {
         super(type, width, height, XPos, YPos, imagePath, layer);
     }
-
-    public void powerUpStickman(EntityViewStickman entityViewStickman) {
-        entityViewStickman.setMushroomPowerUp(true);
-    }
 }

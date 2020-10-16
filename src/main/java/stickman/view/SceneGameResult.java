@@ -54,19 +54,4 @@ public class SceneGameResult {
     public String getSceneMessage() {
         return this.screenMessage;
     }
-
-//    public void drawScene() {
-//        this.screen = new Rectangle(0, 0, width, height);
-//        this.screen.setFill(Paint.valueOf("BLACK"));
-//        this.screen.setViewOrder(10.0);
-//
-//        Label sceneLabel = new Label();
-//        sceneLabel.setText(this.sceneMessage);
-//        sceneLabel.setFont(Font.font("Arial", 24));
-//        sceneLabel.setLayoutX(width / 2);
-//        sceneLabel.setLayoutY(height / 2);
-//        sceneLabel.setViewOrder(0.0);
-//
-//        this.pane.getChildren().addAll(this.screen, sceneLabel);
-//    }
 }

@@ -1,11 +1,20 @@
 package stickman.model;
 
 public class EntityImplBlob extends EntityImpl implements EntityMoving {
+    protected static final double DEFAULT_SPEED = 0.75;
+
     protected String attack;
     protected String startDirection;
     protected double movementRange;
     protected String imagePathStart;
     protected String imagePathEnd;
+
+    protected double startingXPos;
+    protected boolean movingLeft;
+    protected boolean movingRight;
+
+    private final double xSpeed;
+    private double ySpeed;
 
     public EntityImplBlob(
         String type,
@@ -29,6 +38,32 @@ public class EntityImplBlob extends EntityImpl implements EntityMoving {
         this.movementRange = movementRange;
         this.imagePathStart = imagePathStart;
         this.imagePathEnd = imagePathEnd;
+        this.startingXPos = XPos;
+        this.xSpeed = DEFAULT_SPEED;
+    }
+
+    public void updateXPos() {
+        if (this.XPos < this.startingXPos - this.movementRange) {
+            this.XPos = this.startingXPos - this.movementRange;
+            this.setMovement(false, true);
+
+        } else if (this.XPos > this.startingXPos + this.movementRange) {
+            this.XPos = this.startingXPos + this.movementRange;
+            this.setMovement(true, false);
+        }
+
+        if (this.movingRight) {
+            this.XPos += this.xSpeed * DEFAULT_SPEED;
+        } else if (this.movingLeft) {
+            this.XPos -= this.xSpeed * DEFAULT_SPEED;
+        }
+    }
+
+    public void updateYPos() { }
+
+    protected void setMovement(boolean movingLeft, boolean movingRight) {
+        this.movingLeft = movingLeft;
+        this.movingRight = movingRight;
     }
 
     /*

@@ -9,74 +9,33 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewBlob implements EntityView {
-    protected static final double DEFAULT_SPEED = 0.75;
+public class EntityViewBlob extends EntityViewImplMoving {
+    protected static final double DEFAULT_SPEED = 1.25;
 
-    private final Layer layer;
-    private double width;
-    private double height;
     private final double xSpeed;
-    private double ySpeed;
-    private double xPosition;
-    private double yPosition;
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
-    private boolean canJump;
-
-    private Entity entity;
-    private String imagePath;
-    private boolean delete = false;
-    private ImageView node;
 
     private List<String> standingFrames;
     private int numStandingFrames;
     private char[] tagList = {'a', 'b'};
     private double movementRange;
-    private final double startingXPos;
 
     private final int frameCountRate = 90;
     private int frameCount = 0;
     private int frameIdx = 0;
 
     public EntityViewBlob(Entity entity) {
-        this.entity = entity;
-        this.imagePath = entity.getImagePath();
-
-        this.layer = this.entity.getLayer();
-
-        this.width = this.entity.getWidth();
-        this.height = this.entity.getHeight();
+        super(entity);
 
         this.xSpeed = DEFAULT_SPEED;
-//        this.ySpeed = 0;
-//
-        this.startingXPos = this.entity.getXPos();
-        this.xPosition = this.entity.getXPos();
-        this.yPosition = this.entity.getYPos();
 
-        EntityMoving entityEnemy = (EntityMoving) this.entity;
+        EntityMoving entityEnemy = (EntityMoving) entity;
         this.setMovementRange(entityEnemy);
         this.setInitialDirection(entityEnemy);
 
         this.numStandingFrames = this.tagList.length;
-        String pathStart = ((EntityImplBlob) this.entity).getImagePathStart();
-        String pathEnd = ((EntityImplBlob) this.entity).getImagePathEnd();
+        String pathStart = ((EntityImplBlob) entity).getImagePathStart();
+        String pathEnd = ((EntityImplBlob) entity).getImagePathEnd();
         this.loadEntityFrames(pathStart, pathEnd, this.tagList);
-
-        this.imagePath = this.entity.getImagePath();
-        URL imageURL = this.getClass().getResource(this.imagePath);
-        this.node = new ImageView(imageURL.toExternalForm());
-        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
-
-        System.out.println("BLOB2: this.xPosition - " + this.xPosition);
-        System.out.println("BLOB2: this.yPosition - " + this.yPosition);
-        System.out.println("BLOB2: this.startingXPos - " + this.startingXPos);
-        System.out.println("BLOB2: this.movementRange - " + this.movementRange);
-        System.out.println("BLOB2: this.movingRight - " + this.movingRight);
-        System.out.println("BLOB2: this.movingLeft - " + this.movingLeft);
-        System.out.println("BLOB2: this.height - " + this.height);
-        System.out.println("BLOB2: this.width - " + this.width);
-
     }
 
     @Override

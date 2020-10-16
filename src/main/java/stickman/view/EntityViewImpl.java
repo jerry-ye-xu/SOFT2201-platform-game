@@ -10,17 +10,16 @@ import javafx.scene.image.ImageView;
 import java.net.URL;
 
 public class EntityViewImpl implements EntityView {
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
-    private double xPosition;
-    private double yPosition;
+    protected Entity entity;
+    protected boolean delete = false;
+    protected ImageView node;
+    protected String imagePath;
+    protected double xPosition;
+    protected double yPosition;
 
     EntityViewImpl(Entity entity) {
         this.entity = entity;
-//        System.out.println("Inside EntityViewImpl");
-//        System.out.println("this.entity: " + this.entity);
+
         this.imagePath = this.entity.getImagePath();
         URL imageURL = this.getClass().getResource(this.imagePath);
         this.node = new ImageView(imageURL.toExternalForm());
@@ -28,8 +27,10 @@ public class EntityViewImpl implements EntityView {
 
         this.xPosition = entity.getXPos();
         this.yPosition = entity.getYPos();
-        this.node.setX(entity.getXPos());
-        this.node.setY(entity.getXPos());
+
+        this.node.setX(this.entity.getXPos());
+        this.node.setY(this.entity.getYPos());
+
         this.node.setFitHeight(entity.getHeight());
         this.node.setFitWidth(entity.getWidth());
         this.node.setPreserveRatio(true);
@@ -63,10 +64,8 @@ public class EntityViewImpl implements EntityView {
         delete = false;
     }
 
-    @Override
     public void updateXPos() { }
 
-    @Override
     public void updateYPos() { }
 
     @Override
@@ -83,9 +82,7 @@ public class EntityViewImpl implements EntityView {
     }
 
     @Override
-    public Node getNode() {
-        return this.node;
-    }
+    public Node getNode() { return this.node; }
 
     @Override
     public boolean isMarkedForDelete() {

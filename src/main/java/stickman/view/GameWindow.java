@@ -7,11 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import stickman.model.Entity;
-import stickman.model.EntityImplBlob;
-import stickman.model.EntityImplMushroom;
-import stickman.view.EntityViewFireball;
-import stickman.model.GameEngine;
+import stickman.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +19,6 @@ public class GameWindow {
     private Scene scene;
     private Pane pane;
     private GameEngine model;
-    private ImageView previousStickmanFrame;
     private List<EntityView> entityViews;
     private BackgroundDrawer backgroundDrawer;
 
@@ -53,16 +48,19 @@ public class GameWindow {
 
         this.backgroundDrawer = new BlockedBackground();
         this.backgroundDrawer.draw(model, this.pane);
-        this.pane.getChildren().add(this.model.getEntityViewStickman().getNode());
 
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            System.out.println("blob: " + blob);
-            this.pane.getChildren().add(blob.getNode());
-        }
-        int numLives = this.model.getEntityViewStickman().getNumLives();
-        int score = this.model.getEntityViewStickman().getScore();
-        this.gameStats = new SceneStats(numLives, score);
-        this.pane.getChildren().addAll(gameStats.getlivesLabel(), gameStats.getScoreLabel());
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
+
+        EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
+
+        this.gameStats = new SceneStats(
+            stickmanView.getNumLives(),
+            stickmanView.getScore()
+        );
+        this.pane.getChildren().addAll(
+                gameStats.getlivesLabel(),
+                gameStats.getScoreLabel()
+        );
     }
 
     public Scene getScene() {
@@ -79,165 +77,149 @@ public class GameWindow {
 
     private void draw() {
         this.model.tick();
-        this.gameStats.updateStats(this.model.getEntityViewStickman());
+        this.model.getCurrentLevel().addEntityViewsToPane(this.pane);
 
+        EntityViewStickman stickmanView = this.model.getCurrentLevel().getEntityViewStickman();
         List<Entity> entities = this.model.getCurrentLevel().getEntities();
+        List<EntityViewImplMoving> movingViews = this.model.getCurrentLevel().getEntityViewsMovingList();
+
+        EntityViewCollision entityViewCollision = new EntityViewCollisionImpl();
+
+        for (EntityViewImplMoving movingView: movingViews) {
+            movingView.update(xViewportOffset);
+
+            if (movingView.isMarkedForDelete()) {
+                pane.getChildren().remove(movingView.getNode());
+            }
+        }
+
+        movingViews.removeIf(EntityView::isMarkedForDelete);
+
+        stickmanView.update(xViewportOffset);
+        this.gameStats.updateStats(stickmanView);
+
+        /*
+            Handling Collision
+         */
+
+        entityViewCollision.handleCollision(
+                stickmanView,
+                entities,
+                movingViews,
+                entityViews
+
+        );
+
+        /*
+            Handling Blob Collision
+         */
+
+//        for (EntityViewBlob blob: blobViewList) {
+//            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+//            ImageView blobImage = (ImageView) blob.getNode();
+//            if (stickmanImage.intersects(blobImage.getLayoutBounds())) {
+//                stickmanView.decreaseLive();
+//                stickmanView.setMushroomPowerUp(false);
+//                stickmanView.resetPosition();
+//            }
+//        }
+
+        /*
+            Handling Fireball mechanism
+         */
+
+//        for (EntityViewFireball fireball: fireballViewList) {
+//            fireball.update(xViewportOffset);
+//
+//            if (!pane.getChildren().contains(fireball.getNode())) {
+//                pane.getChildren().add(fireball.getNode());
+//            }
+//
+//            ImageView fireballView = (ImageView) fireball.getNode();
+//            for (EntityViewBlob blob: blobViewList) {
+//                ImageView blobView = (ImageView) blob.getNode();
+//                if (fireballView.intersects(blobView.getLayoutBounds())) {
+//                    stickmanView.increaseScore(50);
+//
+//                    blob.markForDelete();
+//                    fireball.markForDelete();
+//                    pane.getChildren().remove(blob.getNode());
+//                }
+//            }
+//
+//            // If fireball hits a stationary object remove it.
+//            for (EntityView entityView: entityViews) {
+//                ImageView entityNode = (ImageView) entityView.getNode();
+//                if (fireballView.intersects(entityNode.getLayoutBounds())) {
+//                    fireball.markForDelete();
+//                }
+//            }
+//
+//            if (fireball.isMarkedForDelete()) {
+//                pane.getChildren().remove(fireball.getNode());
+//            }
+//
+//        }
+//
+//        fireballViewList.removeIf(EntityView::isMarkedForDelete);
+//        blobViewList.removeIf(EntityView::isMarkedForDelete);
+
+        /*
+            Handling Tile/Platform Collision
+         */
+
+//        onPlatformTiles = 0;
+//        for (EntityView entityView: entityViews) {
+//            ImageView stickmanImage = (ImageView) stickmanView.getNode();
+//            ImageView entityImage = (ImageView) entityView.getNode();
+//            if (
+//                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
+//                entityView.getEntity().getType().equals("tile")
+//            ) {
+//                if ((stickmanImage.getY() < entityImage.getY())
+//                ) {
+//                    onPlatformTiles += 1;
+//                    break;
+//                } else {
+//                    stickmanView.setYspeed(0);
+//                }
+//            }
+//        }
+//        if (onPlatformTiles > 0)  {
+//            stickmanView.setOnPlatform(true);
+//        } else {
+//            stickmanView.setOnPlatform(false);
+//        }
+
+        /*
+            Handling stationary entities
+         */
 
         for (EntityView entityView: entityViews) {
             entityView.markForDelete();
         }
 
-        this.refreshStickmanFrame(this.model, xViewportOffset);
-
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            blob.update(xViewportOffset);
-        }
-
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-            if (!pane.getChildren().contains(fireball.getNode())) {
-                pane.getChildren().add(fireball.getNode());
-            }
-        }
-
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-            System.out.println("GameWindow update...");
-            fireball.update(xViewportOffset);
-        }
-
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-            ImageView fireballView = (ImageView) fireball.getNode();
-            for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-                ImageView blobView = (ImageView) blob.getNode();
-                if (fireballView.intersects(blobView.getLayoutBounds())) {
-                    this.model.getEntityViewStickman().increaseScore(50);
-
-                    blob.markForDelete();
-                    fireball.markForDelete();
-                    pane.getChildren().remove(blob.getNode());
-                }
-            }
-            for (EntityView entityView: entityViews) {
-                ImageView entityNode = (ImageView) entityView.getNode();
-                if (fireballView.intersects(entityNode.getLayoutBounds())) {
-                    fireball.markForDelete();
-//                    if (entityView.getEntity().getType().equals("blob")) {
-//                        entityView.markForDelete();
-//                        pane.getChildren().remove(fireball.getNode());
-//                    }
-                }
-            }
-        }
-//        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-//            ImageView fireballView = (ImageView) fireball.getNode();
-//
-//        }
-
-        for (EntityViewFireball fireball: this.model.getCurrentLevel().getEntityViewFireballList()) {
-            if (fireball.isMarkedForDelete()) {
-                pane.getChildren().remove(fireball.getNode());
-            }
-        }
-
-        this.model.getCurrentLevel().getEntityViewFireballList().removeIf(EntityView::isMarkedForDelete);
-        this.model.getEntityViewBlobList().removeIf(EntityView::isMarkedForDelete);
-
-        for (EntityViewBlob blob: this.model.getEntityViewBlobList()) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
-            ImageView blobView = (ImageView) blob.getNode();
-            if (stickmanView.intersects(blobView.getLayoutBounds())) {
-                System.out.println("Intersects!");
-                this.model.getEntityViewStickman().decreaseLive();
-                this.model.getEntityViewStickman().setMushroomPowerUp(false);
-                this.model.getEntityViewStickman().resetPosition();
-            }
-        }
-
-        onPlatformTiles = 0;
         for (EntityView entityView: entityViews) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
+            ImageView stickmanImage = (ImageView) stickmanView.getNode();
             ImageView entityImage = (ImageView) entityView.getNode();
             if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
-                entityView.getEntity().getType().equals("tile")
-            ) {
-                if ((stickmanView.getY() < entityImage.getY())
-                ) {
-                    System.out.println("Intersects a platform");
-                    System.out.println("entityImage.getY(): " + entityImage.getY());
-                    System.out.println("stickmanView.getY(): " + stickmanView.getY());
-//                if (stickmanView.getY() > entityImage.getY()) {
-                    System.out.println("Set on platform");
-                    System.out.println(this.model.getCurrentLevel().getFloorHeight() - entityImage.getY());
-                    System.out.println("this.model.getEntityViewStickman().getCanJump()");
-                    System.out.println(this.model.getEntityViewStickman().getCanJump());
-//                this.yViewportOffset = this.model.getCurrentLevel().getFloorHeight()
-//                        entityImage.getY() -
-//                        this.model.getEntityViewStickman().getHeight()
-//                ;
-                    onPlatformTiles += 1;
-                    System.out.println("onPlatformTile LOOP: " + onPlatformTiles);
-                    System.out.println("Touching tiles!!");
-//                this.model.getEntityViewStickman().setYspeed(0);
-//                this.model.getEntityViewStickman().setYPosition(
-//                        stickmanView.getY() -
-//                        this.model.getEntityViewStickman().getHeight()
-//                );
-                    System.out.println(this.model.getEntityViewStickman().getXPosition());
-                    System.out.println(this.model.getEntityViewStickman().getYPosition());
-//                }
-                    break;
-                } else {
-                    this.model.getEntityViewStickman().setYspeed(0);
-                }
-            }
-//            System.out.println("Not in platform anymore!");
-        }
-        if (onPlatformTiles > 0)  {
-            System.out.println("onPlatformTile BOOLEAN: " + onPlatformTiles);
-            this.model.getEntityViewStickman().setOnPlatform(true);
-        } else {
-            System.out.println("Not touching tiles??");
-            System.out.println(this.model.getEntityViewStickman().getXPosition());
-            System.out.println(this.model.getEntityViewStickman().getYPosition());
-            this.model.getEntityViewStickman().setOnPlatform(false);
-        }
-
-
-//        if (this.model.getEntityViewStickman().getOnPlatform()) {
-//            System.out.println("this.model.getEntityViewStickman().getOnPlatform(): " + this.model.getEntityViewStickman().getOnPlatform());
-//            this.model.getEntityViewStickman().setYOffset(this.yViewportOffset);
-//        } else {
-//            this.model.getEntityViewStickman().setYOffset(0);
-//        }
-
-
-        for (EntityView entityView: entityViews) {
-            ImageView stickmanView = (ImageView) this.model.getEntityViewStickman().getNode();
-            ImageView entityImage = (ImageView) entityView.getNode();
-//            System.out.println("blobView.getLayoutBounds(): " + blobView.getLayoutBounds());
-//            System.out.println("stickmanView.getLayoutBounds(): " + stickmanView.getLayoutBounds());
-            if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("flag")
             ) {
-                System.out.println("Intersects an flag");
-                this.model.getEntityViewStickman().setWinStatus(true);
+                stickmanView.setWinStatus(true);
             }
+
             if (
-                stickmanView.intersects(entityImage.getLayoutBounds()) &&
+                stickmanImage.intersects(entityImage.getLayoutBounds()) &&
                 entityView.getEntity().getType().equals("mushroom")
             ) {
-                System.out.println("Intersects an mushroom");
-                this.model.getCurrentLevel().getEntities().remove(entityView.getEntity());
-                this.model.getEntityViewStickman().increaseScore(100);
-                this.model.getEntityViewStickman().setMushroomPowerUp(true);
+                entities.remove(entityView.getEntity());
+                stickmanView.increaseScore(100);
+                stickmanView.setMushroomPowerUp(true);
             }
         }
 
-        double heroXPos = model.getEntityViewStickman().getXPosition();
-//        System.out.println("BEFORE -= xViewportOffset");
-//        System.out.println("xViewportOffset: " + xViewportOffset);
-//        System.out.println("heroXPos: " + heroXPos);
+        double heroXPos = stickmanView.getXPosition();
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
@@ -248,137 +230,56 @@ public class GameWindow {
                 }
             }
         } else if (heroXPos > width - VIEWPORT_MARGIN) {
-//            System.out.println("MOVING THE FRAME...");
-//            System.out.println("heroXPos: " + heroXPos);
-//            System.out.println("xViewportOffset: " + xViewportOffset);
             xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
-//            System.out.println("xViewportOffset: " + xViewportOffset);
 
-            double stickmanWidth = this.model.getEntityViewStickman().getWidth();
+            double stickmanWidth = stickmanView.getWidth();
 
             if (xViewportOffset >= this.model.getCurrentLevel().getWidth() - width + stickmanWidth) {
                 xViewportOffset = this.model.getCurrentLevel().getWidth() - width + stickmanWidth;
             }
         }
 
-//        System.out.println("AFTER updating xViewportOffset");
-//        System.out.println("heroXPos: " + heroXPos);
-//        System.out.println("VIEWPORT_MARGIN: " + VIEWPORT_MARGIN);
-//        System.out.println("width: " + width);
-//        System.out.println("xViewportOffset: " + xViewportOffset);
-
-        backgroundDrawer.update(xViewportOffset);
-
         for (Entity entity: entities) {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {
                     notFound = false;
-//                    ImageView blobView = (ImageView) view.getNode();
-//                    System.out.println("view.getLayoutBounds(): " + blobView.getLayoutBounds());
-//                    System.out.println(view.getEntity());getType()
-//                    System.out.println(view.getEntity().);
-                    if (view.getEntity().getType().equals("fireball")) {
-                        System.out.println(view.getEntity().getType());
-                        System.out.println(view.getNode().getLayoutX());
-                        System.out.println(view.getNode().getLayoutY());
-                    }
                     view.update(xViewportOffset);
                     break;
                 }
             }
             if (notFound) {
                 EntityView entityView;
-//                if (entity.getType().equals("fireball")) {
-//                    entityView = new EntityViewFireball(entity);
-//                } else {
-//                    entityView = new EntityViewImpl(entity);
-//                }
                 entityView = new EntityViewImpl(entity);
                 entityViews.add(entityView);
-
-//                ImageView blobView = (ImageView) entityView.getNode();
-//                System.out.println("blobView.getLayoutBounds(): " + blobView.getLayoutBounds());
-//                System.out.println(entityView.getEntity());
                 pane.getChildren().add(entityView.getNode());
             }
         }
 
         for (EntityView entityView: entityViews) {
-//            System.out.println(entityView);
-//            System.out.println(entityView.getEntity());
-//            System.out.println(entityView.getNode());
-//            System.out.println(entityView.getNode().getLayoutBounds());
             if (entityView.isMarkedForDelete()) {
-                System.out.println(entityView);
-                System.out.println(entityView.getEntity());
-                System.out.println(entityView.getNode());
-                System.out.println(entityView.getNode().getLayoutBounds());
                 pane.getChildren().remove(entityView.getNode());
             }
         }
 
+        backgroundDrawer.update(xViewportOffset);
         entityViews.removeIf(EntityView::isMarkedForDelete);
 
-        if (this.model.getEntityViewStickman().getNumLives() == 0) {
+        /*
+            Game ending conditions.
+         */
+
+        if (stickmanView.getNumLives() == 0) {
             SceneGameResult deathScene = new SceneGameResult(this.width, this.height, "You lose! =(");
             this.pane.getChildren().removeAll();
             this.pane.getChildren().addAll(deathScene.getScreen(), deathScene.getScreenLabel());
         }
 
-        if (this.model.getEntityViewStickman().getWinStatus()) {
+        if (stickmanView.getWinStatus()) {
             SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
             this.pane.getChildren().removeAll();
             this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
         }
 
-//        if (
-//            this.model.getEntityViewStickman().getNode().intersects(entityView.getNode().getLayoutBounds()) &&
-//            entityView.getEntity().getType().equals("flag")
-//        ) {
-//            SceneGameResult winScene = new SceneGameResult(this.width, this.height, "You win! =D");
-//            this.pane.getChildren().removeAll();
-//            this.pane.getChildren().addAll(winScene.getScreen(), winScene.getScreenLabel());
-//        }
     }
-
-    private void refreshStickmanFrame(GameEngine model, double xViewportOffset) {
-        EntityViewStickman stickman = model.getEntityViewStickman();
-        stickman.update(xViewportOffset);
-//        EntityViewStickman stickman = model.getEntityViewStickman();
-//        this.pane.getChildren().remove(this.previousStickmanFrame);
-//        this.previousStickmanFrame = stickman.update(xViewportOffset);
-//        this.pane.getChildren().add(this.previousStickmanFrame);
-    }
-
-    private boolean hasCollided(EntityViewStickman stickman, EntityView entityView) {
-        double entityViewHeight = entityView.getNode().getBoundsInParent().getHeight();
-        double entityViewWidth = entityView.getNode().getBoundsInParent().getWidth();
-        double entityViewXPos = entityView.getNode().getLayoutX();
-        double entityViewYPos = entityView.getNode().getLayoutY();
-
-        double stickmanXPos = stickman.getXPosition();
-        double stickmanYPos = stickman.getYPosition();
-        double stickmanWidth = stickman.getWidth();
-        double stickmanHeight = stickman.getHeight();
-
-        return (
-            (stickmanXPos < (entityViewXPos + entityViewWidth)) &&
-            ((stickmanXPos + stickmanWidth) > entityViewXPos) &&
-            (stickmanYPos < (entityViewYPos + entityViewHeight)) &&
-            ((stickmanYPos + stickmanHeight) > entityViewYPos)
-        );
-    }
-
-    private void updateGameScore() {
-
-    }
-
-//    private void addStationaryEntities(GameEngine model, Pane pane) {
-//        List<Platform> platformList = model.getCurrentLevel().getPlatforms();
-//
-//        for (Platform platform: platformList) {
-//            pane.getChildren().add(platform.getHBox());
-//        }
-//    }
 }

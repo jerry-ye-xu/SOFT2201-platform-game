@@ -7,10 +7,6 @@ public interface EntityView {
 
     void update(double xViewportOffset);
 
-    public void updateXPos();
-
-    public void updateYPos();
-
     public Entity getEntity();
 
     boolean matchesEntity(Entity entity);

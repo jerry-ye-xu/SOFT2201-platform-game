@@ -13,32 +13,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityViewStickman implements EntityView {
-    protected static final double DEFAULT_SPEED = 2;
+public class EntityViewStickman extends EntityViewImplMoving {
+    protected static final double DEFAULT_SPEED = 6;
     protected static final double DEFAULT_JUMP = 12;
-    protected static final double DROP_ACCEL = 0.40;
+    protected static final double DROP_ACCEL = 0.65;
 
-    private Entity entity;
-    private boolean delete = false;
-    private ImageView node;
-    private String imagePath;
-
-    private final Layer layer;
-    private double width;
-    private double height;
     private final double xSpeed;
-    private double ySpeed;
-    private double xPosition;
-    private double yPosition;
     private double yOffset = 0;
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
-    private boolean facingL = false;
-    private boolean facingR = true;
-    private boolean canJump = true;
-    private boolean onPlatform = false;
+
     private final double startingXPos;
     private final double startingYPos;
+
+    private boolean facingL = false;
+    private boolean facingR = true;
+
+    private boolean canJump = true;
+    private boolean onPlatform = false;
 
     private int numLives = 3;
     private int score = 0;
@@ -61,30 +51,15 @@ public class EntityViewStickman implements EntityView {
     private final int numFramesStillLeft = 3;
 
     private final int frameCountRate = 30;
-    private int frameCount = 0;
-    private int frameIdx = 0;
 
     public EntityViewStickman(Entity entity) {
-        this.entity = entity;
-        this.layer = this.entity.getLayer();
-
-        this.width = this.entity.getWidth();
-        this.height = this.entity.getHeight();
-
-        System.out.println("yPosition: " + yPosition);
-        this.xPosition = this.entity.getXPos();
-        this.yPosition = this.entity.getYPos() - this.entity.getHeight();
-        this.startingXPos = this.entity.getXPos();
-        this.startingYPos = this.entity.getYPos();
-        System.out.println("yPosition: " + yPosition);
+        super(entity);
 
         this.xSpeed = DEFAULT_SPEED;
         this.ySpeed = 0;
 
-        this.imagePath = this.entity.getImagePath();
-        URL imageURL = this.getClass().getResource(this.imagePath);
-        this.node = new ImageView(imageURL.toExternalForm());
-        this.node.setViewOrder(getViewOrder(this.entity.getLayer()));
+        this.startingXPos = this.entity.getXPos();
+        this.startingYPos = this.entity.getYPos();
 
         this.loadEntityFrames();
     }
@@ -101,7 +76,6 @@ public class EntityViewStickman implements EntityView {
 
     public boolean fire(Level level) {
         if (this.mushroomPowerUp) {
-            System.out.println("Shooting fireball...");
             List<Entity> entityList = level.getEntities();
 
             String startDirection;
@@ -126,9 +100,7 @@ public class EntityViewStickman implements EntityView {
                 ".png"
             );
 
-//            entityList.add(fireBallEntity);
-
-            level.getEntityViewFireballList().add(new EntityViewFireball(fireBallEntity));
+            level.getEntityViewsMovingList().add(new EntityViewFireball(fireBallEntity));
         }
         return false;
     }
@@ -140,37 +112,14 @@ public class EntityViewStickman implements EntityView {
 
     public void updateXPos(Level level) {
         if (this.movingRight) {
-//            System.out.println("Update movingRight");
-//            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
-//            System.out.println("this.xSpeed: " + this.xSpeed);
-//            System.out.println("this.xPosition: " + this.xPosition);
-            this.xPosition += this.xSpeed * DEFAULT_SPEED;
-//            System.out.println("this.xPosition: " + this.xPosition);
+            this.xPosition += this.xSpeed;
             this.facingL = false;
             this.facingR = true;
         } else if (this.movingLeft) {
-//            System.out.println("Update movingLeft");
-//            System.out.println("DEFAULT_SPEED: " + DEFAULT_SPEED);
-//            System.out.println("this.xSpeed: " + this.xSpeed);
-//            System.out.println("this.xPosition: " + this.xPosition);
-            this.xPosition -= this.xSpeed * DEFAULT_SPEED;
-//            System.out.println("this.xPosition: " + this.xPosition);
+            this.xPosition -= this.xSpeed;
             this.facingL = true;
             this.facingR = false;
         }
-
-//        for (Platform platform: level.getPlatforms()) {
-//            if (
-//                this.xPosition < platform.getStartWidth() &&
-//                this.xPosition > platform.getEndWidth() &&
-//                this.yPosition == (platform.getHeight() + platform.getHBox().getHeight()) &&
-//                this.onPlatform == true
-//            ) {
-//                // If you walk off a platform then fall down.
-//                this.onPlatform = false;
-//                this.updateYPos(level);
-//            }
-//        }
 
         // Cannot go past the boundaries of the stage.
         if (this.xPosition >= level.getWidth()) {
@@ -184,39 +133,11 @@ public class EntityViewStickman implements EntityView {
         if (this.onPlatform) {
             this.ySpeed = 0;
             this.canJump = true;
-//            this.yPosition -= this.height;
         } else if (!this.onPlatform)  {
             this.ySpeed += DROP_ACCEL;
             this.yPosition += this.ySpeed;
         }
 
-//        System.out.println("DECREASE: this.yPosition: " + this.yPosition);
-
-//        for (Platform platform: level.getPlatforms()) {
-//            double platformHeight = platform.getHeight() - platform.getHBox().getHeight();
-//            System.out.println("this.xPosition: " + this.xPosition);
-//            System.out.println("platform.getStartWidth(): " + platform.getStartWidth());
-//            System.out.println("platform.getEndWidth(): " + platform.getEndWidth());
-//            System.out.println("this.xPosition: " + this.xPosition);
-//            System.out.println("this.yPosition: " + this.yPosition);
-//            System.out.println("this.onPlatform: " + this.onPlatform);
-//            System.out.println("platformHeight: " + platformHeight);
-//            if (
-//                this.xPosition >= platform.getStartWidth() &&
-//                this.xPosition <= platform.getEndWidth() &&
-//                this.yPosition < platformHeight &&
-//                this.onPlatform == false
-//            ) {
-//                // If you jump higher than the platform, then you can land on it.
-//                canLandOnPlatform = true;
-//            }
-//
-//            if (canLandOnPlatform && this.yPosition <= platformHeight) {
-//                this.yPosition = platform.getHeight() - platform.getHBox().getHeight();
-//                this.onPlatform = true;
-//                this.canJump = true;
-//                this.ySpeed = 0;
-//            }
         if (this.onPlatform) {
             this.canJump = true;
         }
@@ -228,10 +149,6 @@ public class EntityViewStickman implements EntityView {
             this.ySpeed = 0;
         }
     }
-
-    public void updateXPos() { }
-
-    public void updateYPos() { }
 
     public double getYOffset() {
         return this.yOffset;
@@ -356,8 +273,6 @@ public class EntityViewStickman implements EntityView {
                 if (doUpdateFrame()) {
                     this.frameIdx = (this.frameIdx + 1) % this.numFramesStillRight;
                 }
-//                System.out.println("standingRightFrames: " + standingRightFrames);
-//                System.out.println("frameIdx: " + frameIdx);
                 imagePath = standingRightFrames.get(this.frameIdx);
 
             }
@@ -441,6 +356,7 @@ public class EntityViewStickman implements EntityView {
     public void setXPosition(double xPosition) {
         this.xPosition = xPosition;
     }
+
     public void setYPosition(double yPosition) {
         this.yPosition = yPosition;
     }

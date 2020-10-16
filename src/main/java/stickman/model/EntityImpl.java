@@ -59,4 +59,10 @@ public class EntityImpl implements Entity {
         return this.layer;
     }
 
+    @Override
+    public void updateXPos() { }
+
+    @Override
+    public void updateYPos() { }
+
 }
